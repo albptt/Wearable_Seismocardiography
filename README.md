@@ -1,4 +1,4 @@
-<h1 align="center"> AY2324_I_Project-6: HEA </h1>
+<h1 align="center"> HEA </h1>
 
 <p align="center">
   <img src="https://github.com/ltebs-polimi/AY2324_I_Project-6/blob/main/images/gui_gif_new.gif" alt="animated" style="width: 2000px;"/>
