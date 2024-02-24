@@ -1,0 +1,1990 @@
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.main,"ax",%progbits
+  20              		.align	2
+  21              		.global	main
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	main, %function
+  25              	main:
+  26              	.LFB64:
+  27              		.file 1 "main.c"
+   1:main.c        **** /* ========================================
+   2:main.c        ****  *
+   3:main.c        ****  * Politecnico di Milano 
+   4:main.c        ****  * LTEBS A.Y. 2023/24 
+   5:main.c        ****  * Mentasti, Pettenella, Salama, Vacca
+   6:main.c        ****  *
+   7:main.c        ****  * ========================================
+   8:main.c        **** */
+   9:main.c        **** 
+  10:main.c        **** // Include header files
+  11:main.c        **** #include "global_variables.h"
+  12:main.c        **** #include "InterruptRoutines.h"
+  13:main.c        **** #include <stdlib.h>
+  14:main.c        **** #include "C:\Users\Matteo\Desktop\Oled-Psoc5\OLED.cydsn\ssd1306.h"
+  15:main.c        **** // OLED display address
+  16:main.c        **** #define DISPLAY_ADDRESS 0x3D // 011110+SA0+RW - 0x3C or 0x3D 
+  17:main.c        **** // Define EEPROM variables
+  18:main.c        **** #define WRITE_EEPROM 0
+  19:main.c        **** #define R_LED_EEPROM_ADDRESS 0x00
+  20:main.c        **** #define G_LED_EEPROM_ADDRESS 0x01
+  21:main.c        **** #define B_LED_EEPROM_ADDRESS 0x02
+  22:main.c        **** #define BUZZ_EEPROM_ADDRESS 0x03
+  23:main.c        **** #define OLED_EEPROM_ADDRESS 0x04
+  24:main.c        **** #define OLED_STRING 0
+  25:main.c        **** // Define configuration variables
+  26:main.c        **** #define FIFO_REG_BYPASS 0x00
+  27:main.c        **** #define FIFO_REG_STREAM 0x80
+  28:main.c        **** #define OVR_INT_ENABLE 0x02
+  29:main.c        **** #define FIFO_ENABLE 0x40
+  30:main.c        **** #define ODR_AX_ENABLE 0x47
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 2
+
+
+  31:main.c        **** // String to print out messages over UART
+  32:main.c        **** char message[100] = {'\0'};
+  33:main.c        **** // startup strings
+  34:main.c        **** char *stringList_1[] = {
+  35:main.c        ****         "HeART",
+  36:main.c        ****         "START"       
+  37:main.c        ****     };
+  38:main.c        **** char *stringList_2[] = {
+  39:main.c        ****         "ATTACK",
+  40:main.c        ****         "DEVICE"
+  41:main.c        ****     };
+  42:main.c        **** 
+  43:main.c        **** int main(void)
+  44:main.c        **** {   
+  28              		.loc 1 44 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 70B5     		push	{r4, r5, r6, lr}
+  33              		.cfi_def_cfa_offset 16
+  34              		.cfi_offset 4, -16
+  35              		.cfi_offset 5, -12
+  36              		.cfi_offset 6, -8
+  37              		.cfi_offset 14, -4
+  38 0002 82B0     		sub	sp, sp, #8
+  39              		.cfi_def_cfa_offset 24
+  45:main.c        ****     // Enable Global Interrupts
+  46:main.c        ****     CyGlobalIntEnable; 
+  40              		.loc 1 46 0
+  41              		.syntax unified
+  42              	@ 46 "main.c" 1
+  43 0004 62B6     		CPSIE   i
+  44              	@ 0 "" 2
+  47:main.c        ****     
+  48:main.c        ****     // Configure Peripherals
+  49:main.c        ****     I2C_Peripheral_Start();
+  45              		.loc 1 49 0
+  46              		.thumb
+  47              		.syntax unified
+  48 0006 FFF7FEFF 		bl	I2C_Peripheral_Start
+  49              	.LVL0:
+  50:main.c        ****     UART_1_Start();
+  50              		.loc 1 50 0
+  51 000a FFF7FEFF 		bl	UART_1_Start
+  52              	.LVL1:
+  51:main.c        ****     isr_stream_1_StartEx(Custom_ISR_RX);
+  53              		.loc 1 51 0
+  54 000e 4448     		ldr	r0, .L4
+  55 0010 FFF7FEFF 		bl	isr_stream_1_StartEx
+  56              	.LVL2:
+  52:main.c        ****     display_init(DISPLAY_ADDRESS); 
+  57              		.loc 1 52 0
+  58 0014 3D20     		movs	r0, #61
+  59 0016 FFF7FEFF 		bl	display_init
+  60              	.LVL3:
+  53:main.c        ****     EEPROM_Start();
+  61              		.loc 1 53 0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 3
+
+
+  62 001a FFF7FEFF 		bl	EEPROM_Start
+  63              	.LVL4:
+  54:main.c        ****     
+  55:main.c        ****     // Enable Timers
+  56:main.c        ****     Timer_3_Init();
+  64              		.loc 1 56 0
+  65 001e FFF7FEFF 		bl	Timer_3_Init
+  66              	.LVL5:
+  57:main.c        ****     Timer_3_Enable();
+  67              		.loc 1 57 0
+  68 0022 FFF7FEFF 		bl	Timer_3_Enable
+  69              	.LVL6:
+  58:main.c        ****     Timer_30_Init();
+  70              		.loc 1 58 0
+  71 0026 FFF7FEFF 		bl	Timer_30_Init
+  72              	.LVL7:
+  59:main.c        ****     Timer_30_Enable();
+  73              		.loc 1 59 0
+  74 002a FFF7FEFF 		bl	Timer_30_Enable
+  75              	.LVL8:
+  60:main.c        ****     Timer_1H_Init();
+  76              		.loc 1 60 0
+  77 002e FFF7FEFF 		bl	Timer_1H_Init
+  78              	.LVL9:
+  61:main.c        ****     Timer_1H_Enable();
+  79              		.loc 1 61 0
+  80 0032 FFF7FEFF 		bl	Timer_1H_Enable
+  81              	.LVL10:
+  62:main.c        ****     
+  63:main.c        ****     // Enable Counters
+  64:main.c        ****     isr_Counter_3_StartEx(Custom_ISR_Counter_3);
+  82              		.loc 1 64 0
+  83 0036 3B48     		ldr	r0, .L4+4
+  84 0038 FFF7FEFF 		bl	isr_Counter_3_StartEx
+  85              	.LVL11:
+  65:main.c        ****     isr_Counter_30_StartEx(Custom_ISR_Counter_30);
+  86              		.loc 1 65 0
+  87 003c 3A48     		ldr	r0, .L4+8
+  88 003e FFF7FEFF 		bl	isr_Counter_30_StartEx
+  89              	.LVL12:
+  66:main.c        ****     isr_Counter_1H_StartEx(Custom_ISR_Counter_1H);
+  90              		.loc 1 66 0
+  91 0042 3A48     		ldr	r0, .L4+12
+  92 0044 FFF7FEFF 		bl	isr_Counter_1H_StartEx
+  93              	.LVL13:
+  67:main.c        ****     
+  68:main.c        ****     // Allow for boot procedure to complete
+  69:main.c        ****     CyDelay(5); 
+  94              		.loc 1 69 0
+  95 0048 0520     		movs	r0, #5
+  96 004a FFF7FEFF 		bl	CyDelay
+  97              	.LVL14:
+  70:main.c        ****     
+  71:main.c        ****     // Write EEPROM if needed
+  72:main.c        ****     if (WRITE_EEPROM)
+  73:main.c        ****     {   
+  74:main.c        ****         // Update Temperature to optimize WRITE operation
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 4
+
+
+  75:main.c        ****         EEPROM_UpdateTemperature();
+  76:main.c        ****         // Write initial LED states
+  77:main.c        ****         EEPROM_WriteByte(LOW,R_LED_EEPROM_ADDRESS);
+  78:main.c        ****         EEPROM_WriteByte(LOW,G_LED_EEPROM_ADDRESS);
+  79:main.c        ****         EEPROM_WriteByte(LOW,B_LED_EEPROM_ADDRESS);
+  80:main.c        ****         // Write initial BUZZ state
+  81:main.c        ****         EEPROM_WriteByte(LOW,BUZZ_EEPROM_ADDRESS);
+  82:main.c        ****         // Write initial OLED string
+  83:main.c        ****         EEPROM_WriteByte(OLED_STRING,OLED_EEPROM_ADDRESS);
+  84:main.c        ****         // Write accelerometer bit resolution 
+  85:main.c        ****         bit_resolution = NORMAL;
+  86:main.c        ****         EEPROM_WriteByte(bit_resolution,BIT_RESOLUTION_ADDRESS);
+  87:main.c        ****         // Write accelerometer g resolution
+  88:main.c        ****         g_resolution = 0;
+  89:main.c        ****         EEPROM_WriteByte(g_resolution,G_RESOLUTION_ADDRESS);
+  90:main.c        ****         // Write power state of device
+  91:main.c        ****         power_mode = NORMAL;
+  92:main.c        ****         EEPROM_WriteByte(g_resolution,POWER_ADDRESS);
+  93:main.c        ****     }
+  94:main.c        ****     
+  95:main.c        ****     // Set initial LED state
+  96:main.c        ****     LED_R_Write(EEPROM_ReadByte(R_LED_EEPROM_ADDRESS));
+  98              		.loc 1 96 0
+  99 004e 0020     		movs	r0, #0
+ 100 0050 FFF7FEFF 		bl	EEPROM_ReadByte
+ 101              	.LVL15:
+ 102 0054 FFF7FEFF 		bl	LED_R_Write
+ 103              	.LVL16:
+  97:main.c        ****     LED_G_Write(EEPROM_ReadByte(G_LED_EEPROM_ADDRESS));
+ 104              		.loc 1 97 0
+ 105 0058 0120     		movs	r0, #1
+ 106 005a FFF7FEFF 		bl	EEPROM_ReadByte
+ 107              	.LVL17:
+ 108 005e FFF7FEFF 		bl	LED_G_Write
+ 109              	.LVL18:
+  98:main.c        ****     LED_B_Write(EEPROM_ReadByte(B_LED_EEPROM_ADDRESS));
+ 110              		.loc 1 98 0
+ 111 0062 0220     		movs	r0, #2
+ 112 0064 FFF7FEFF 		bl	EEPROM_ReadByte
+ 113              	.LVL19:
+ 114 0068 FFF7FEFF 		bl	LED_B_Write
+ 115              	.LVL20:
+  99:main.c        ****     
+ 100:main.c        ****     // Write Startup String on the OLED
+ 101:main.c        ****     update_oled(stringList_1[EEPROM_ReadByte(OLED_EEPROM_ADDRESS)], stringList_2[EEPROM_ReadByte(OL
+ 116              		.loc 1 101 0
+ 117 006c 0420     		movs	r0, #4
+ 118 006e FFF7FEFF 		bl	EEPROM_ReadByte
+ 119              	.LVL21:
+ 120 0072 2F4C     		ldr	r4, .L4+16
+ 121 0074 54F82060 		ldr	r6, [r4, r0, lsl #2]
+ 122 0078 0420     		movs	r0, #4
+ 123 007a FFF7FEFF 		bl	EEPROM_ReadByte
+ 124              	.LVL22:
+ 125 007e 04EB8000 		add	r0, r4, r0, lsl #2
+ 126 0082 8168     		ldr	r1, [r0, #8]
+ 127 0084 2822     		movs	r2, #40
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 5
+
+
+ 128 0086 0192     		str	r2, [sp, #4]
+ 129 0088 2325     		movs	r5, #35
+ 130 008a 0095     		str	r5, [sp]
+ 131 008c 1423     		movs	r3, #20
+ 132 008e 3046     		mov	r0, r6
+ 133 0090 FFF7FEFF 		bl	update_oled
+ 134              	.LVL23:
+ 102:main.c        ****     
+ 103:main.c        ****     // Configure FIFO_CTRL_REG
+ 104:main.c        ****     // Ensure Bypass mode is selected
+ 105:main.c        ****     
+ 106:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 135              		.loc 1 106 0
+ 136 0094 0022     		movs	r2, #0
+ 137 0096 2E21     		movs	r1, #46
+ 138 0098 1820     		movs	r0, #24
+ 139 009a FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 140              	.LVL24:
+ 141 009e 254C     		ldr	r4, .L4+20
+ 142 00a0 2070     		strb	r0, [r4]
+ 107:main.c        ****                                          LIS3DH_FIFO_CTRL_REG,
+ 108:main.c        ****                                          FIFO_REG_BYPASS);
+ 109:main.c        ****     
+ 110:main.c        ****     /*
+ 111:main.c        ****     // Device 2
+ 112:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 113:main.c        ****                                          LIS3DH_FIFO_CTRL_REG,
+ 114:main.c        ****                                          FIFO_REG_BYPASS);
+ 115:main.c        ****     */
+ 116:main.c        ****         
+ 117:main.c        ****     // Configure CTRL_REG2
+ 118:main.c        ****     // Nothing to configure for the current operating mode
+ 119:main.c        ****     
+ 120:main.c        ****     // Configure CTRL_REG3
+ 121:main.c        ****     // Enable interrupt (INT1) on FIFO overrun
+ 122:main.c        ****     
+ 123:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 143              		.loc 1 123 0
+ 144 00a2 0222     		movs	r2, #2
+ 145 00a4 2221     		movs	r1, #34
+ 146 00a6 1820     		movs	r0, #24
+ 147 00a8 FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 148              	.LVL25:
+ 149 00ac 2070     		strb	r0, [r4]
+ 124:main.c        ****                                          LIS3DH_CTRL_REG3,
+ 125:main.c        ****                                          OVR_INT_ENABLE);
+ 126:main.c        ****     /*
+ 127:main.c        ****     // Device 2
+ 128:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 129:main.c        ****                                          LIS3DH_CTRL_REG3,
+ 130:main.c        ****                                          OVR_INT_ENABLE);
+ 131:main.c        ****     */
+ 132:main.c        ****     
+ 133:main.c        ****     // Configure CTRL_REG4
+ 134:main.c        ****     // Select g resolution from EEPROM
+ 135:main.c        ****     
+ 136:main.c        ****     CtrlReg4Config = EEPROM_ReadByte(G_RESOLUTION_ADDRESS);
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 6
+
+
+ 150              		.loc 1 136 0
+ 151 00ae 0620     		movs	r0, #6
+ 152 00b0 FFF7FEFF 		bl	EEPROM_ReadByte
+ 153              	.LVL26:
+ 154 00b4 0246     		mov	r2, r0
+ 155 00b6 204B     		ldr	r3, .L4+24
+ 156 00b8 1870     		strb	r0, [r3]
+ 137:main.c        ****     
+ 138:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 157              		.loc 1 138 0
+ 158 00ba 2946     		mov	r1, r5
+ 159 00bc 1820     		movs	r0, #24
+ 160 00be FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 161              	.LVL27:
+ 162 00c2 2070     		strb	r0, [r4]
+ 139:main.c        ****                                          LIS3DH_CTRL_REG4,
+ 140:main.c        ****                                          CtrlReg4Config);
+ 141:main.c        ****     
+ 142:main.c        ****     /*
+ 143:main.c        ****     // Device 2
+ 144:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 145:main.c        ****                                          LIS3DH_CTRL_REG4,
+ 146:main.c        ****                                          CtrlReg4Config);
+ 147:main.c        ****     */
+ 148:main.c        ****     
+ 149:main.c        ****     // Configure CTRL_REG5
+ 150:main.c        ****     // Enable FIFO 
+ 151:main.c        ****     
+ 152:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 163              		.loc 1 152 0
+ 164 00c4 4022     		movs	r2, #64
+ 165 00c6 2421     		movs	r1, #36
+ 166 00c8 1820     		movs	r0, #24
+ 167 00ca FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 168              	.LVL28:
+ 169 00ce 2070     		strb	r0, [r4]
+ 153:main.c        ****                                          LIS3DH_CTRL_REG5,
+ 154:main.c        ****                                          FIFO_ENABLE);
+ 155:main.c        ****     
+ 156:main.c        ****     /*
+ 157:main.c        ****     // Device 2
+ 158:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 159:main.c        ****                                          LIS3DH_CTRL_REG5,
+ 160:main.c        ****                                          FIFO_ENABLE);
+ 161:main.c        ****     */
+ 162:main.c        ****     
+ 163:main.c        ****     // Configure CTRL_REG6
+ 164:main.c        ****     // Nothing to configure for the current operating mode
+ 165:main.c        ****     
+ 166:main.c        ****     // Configure CTRL_REG1
+ 167:main.c        ****     // Initialize from memory to 0x00
+ 168:main.c        ****     
+ 169:main.c        ****     CtrlReg1Config &= EEPROM_ReadByte(POWER_ADDRESS);
+ 170              		.loc 1 169 0
+ 171 00d0 0720     		movs	r0, #7
+ 172 00d2 FFF7FEFF 		bl	EEPROM_ReadByte
+ 173              	.LVL29:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 7
+
+
+ 174 00d6 194B     		ldr	r3, .L4+28
+ 175 00d8 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 176 00da 0240     		ands	r2, r2, r0
+ 177 00dc 1A70     		strb	r2, [r3]
+ 170:main.c        ****     
+ 171:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 178              		.loc 1 171 0
+ 179 00de 2021     		movs	r1, #32
+ 180 00e0 1820     		movs	r0, #24
+ 181 00e2 FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 182              	.LVL30:
+ 183 00e6 2070     		strb	r0, [r4]
+ 172:main.c        ****                                          LIS3DH_CTRL_REG1,
+ 173:main.c        ****                                          CtrlReg1Config);
+ 174:main.c        ****     
+ 175:main.c        ****     /*
+ 176:main.c        ****     // Device 2
+ 177:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 178:main.c        ****                                          LIS3DH_CTRL_REG1,
+ 179:main.c        ****                                          CtrlReg1Config);
+ 180:main.c        ****     */
+ 181:main.c        ****     
+ 182:main.c        ****     // Now configure ODR and enable X, Y and Z axes
+ 183:main.c        ****     // Select data rate: 50Hz -> CtrlReg1Config |= 0x47;
+ 184:main.c        ****     // Select data rate: 200Hz -> CtrlReg1Config |= 0x67;
+ 185:main.c        ****     // Select data rate: 400Hz -> CtrlReg1Config |= 0x77;
+ 186:main.c        ****     
+ 187:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 184              		.loc 1 187 0
+ 185 00e8 4722     		movs	r2, #71
+ 186 00ea 2021     		movs	r1, #32
+ 187 00ec 1820     		movs	r0, #24
+ 188 00ee FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 189              	.LVL31:
+ 190 00f2 2070     		strb	r0, [r4]
+ 188:main.c        ****                                          LIS3DH_CTRL_REG1,
+ 189:main.c        ****                                          ODR_AX_ENABLE);
+ 190:main.c        ****     /*
+ 191:main.c        ****     // Device 2
+ 192:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 193:main.c        ****                                          LIS3DH_CTRL_REG1,
+ 194:main.c        ****                                          ODR_AX_ENABLE);
+ 195:main.c        ****     */
+ 196:main.c        ****     
+ 197:main.c        ****     // Enable Interrupts for the accelerometers
+ 198:main.c        ****     isr_acc_1_StartEx(custom_acc_1_Interrupt);
+ 191              		.loc 1 198 0
+ 192 00f4 1248     		ldr	r0, .L4+32
+ 193 00f6 FFF7FEFF 		bl	isr_acc_1_StartEx
+ 194              	.LVL32:
+ 199:main.c        ****     
+ 200:main.c        ****     /*
+ 201:main.c        ****     isr_acc_2_StartEx(custom_acc_2_Interrupt);
+ 202:main.c        ****     */
+ 203:main.c        ****     
+ 204:main.c        ****     // Enable stream mode
+ 205:main.c        **** 
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 8
+
+
+ 206:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS,
+ 195              		.loc 1 206 0
+ 196 00fa 8022     		movs	r2, #128
+ 197 00fc 2E21     		movs	r1, #46
+ 198 00fe 1820     		movs	r0, #24
+ 199 0100 FFF7FEFF 		bl	I2C_Peripheral_WriteRegister
+ 200              	.LVL33:
+ 201 0104 2070     		strb	r0, [r4]
+ 207:main.c        ****                                          LIS3DH_FIFO_CTRL_REG,
+ 208:main.c        ****                                          FIFO_REG_STREAM);
+ 209:main.c        ****     
+ 210:main.c        ****     /*
+ 211:main.c        ****     // Device 2
+ 212:main.c        ****     error = I2C_Peripheral_WriteRegister(LIS3DH_DEVICE_ADDRESS_2,
+ 213:main.c        ****                                          LIS3DH_FIFO_CTRL_REG,
+ 214:main.c        ****                                          FIFO_REG_STREAM);
+ 215:main.c        ****     */
+ 216:main.c        ****     
+ 217:main.c        ****     // Configure Timers and ADC
+ 218:main.c        ****     Timer_1H_Start();
+ 202              		.loc 1 218 0
+ 203 0106 FFF7FEFF 		bl	Timer_1H_Start
+ 204              	.LVL34:
+ 219:main.c        ****     uint16 start_counter_bat=10;
+ 220:main.c        ****     // Battery is initialized = 100%, but after 10 seconds from reset the battery is read
+ 221:main.c        ****     Timer_1H_WriteCounter(start_counter_bat); 
+ 205              		.loc 1 221 0
+ 206 010a 0A20     		movs	r0, #10
+ 207 010c FFF7FEFF 		bl	Timer_1H_WriteCounter
+ 208              	.LVL35:
+ 222:main.c        ****     ADC_DelSig_Start();
+ 209              		.loc 1 222 0
+ 210 0110 FFF7FEFF 		bl	ADC_DelSig_Start
+ 211              	.LVL36:
+ 223:main.c        ****     
+ 224:main.c        ****     // Start PWM for LED_R to signal lack of connection
+ 225:main.c        ****     PWM_LED_Start(); 
+ 212              		.loc 1 225 0
+ 213 0114 FFF7FEFF 		bl	PWM_LED_Start
+ 214              	.LVL37:
+ 226:main.c        ****     
+ 227:main.c        ****     // Set ALARM_ENABLE flag
+ 228:main.c        ****     ALARM_ENABLED=1;
+ 215              		.loc 1 228 0
+ 216 0118 0122     		movs	r2, #1
+ 217 011a 0A4B     		ldr	r3, .L4+36
+ 218 011c 1A60     		str	r2, [r3]
+ 219              	.L2:
+ 220 011e FEE7     		b	.L2
+ 221              	.L5:
+ 222              		.align	2
+ 223              	.L4:
+ 224 0120 00000000 		.word	Custom_ISR_RX
+ 225 0124 00000000 		.word	Custom_ISR_Counter_3
+ 226 0128 00000000 		.word	Custom_ISR_Counter_30
+ 227 012c 00000000 		.word	Custom_ISR_Counter_1H
+ 228 0130 00000000 		.word	.LANCHOR0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 9
+
+
+ 229 0134 00000000 		.word	error
+ 230 0138 00000000 		.word	CtrlReg4Config
+ 231 013c 00000000 		.word	CtrlReg1Config
+ 232 0140 00000000 		.word	custom_acc_1_Interrupt
+ 233 0144 00000000 		.word	ALARM_ENABLED
+ 234              		.cfi_endproc
+ 235              	.LFE64:
+ 236              		.size	main, .-main
+ 237              		.global	stringList_2
+ 238              		.global	stringList_1
+ 239              		.global	message
+ 240              		.comm	error,1,1
+ 241              		.comm	CtrlReg4Config,1,1
+ 242              		.comm	CtrlReg1Config,1,1
+ 243              		.comm	LowPowerBuffer,3,4
+ 244              		.comm	G_ResolutionBuffer,3,4
+ 245              		.comm	Bit_ResolutionBuffer,3,4
+ 246              		.comm	power_mode,1,1
+ 247              		.comm	g_resolution,1,1
+ 248              		.comm	bit_resolution,1,1
+ 249              		.comm	ALARM_ENABLED,4,4
+ 250              		.data
+ 251              		.align	2
+ 252              		.set	.LANCHOR0,. + 0
+ 253              		.type	stringList_1, %object
+ 254              		.size	stringList_1, 8
+ 255              	stringList_1:
+ 256 0000 10000000 		.word	.LC2
+ 257 0004 18000000 		.word	.LC3
+ 258              		.type	stringList_2, %object
+ 259              		.size	stringList_2, 8
+ 260              	stringList_2:
+ 261 0008 00000000 		.word	.LC0
+ 262 000c 08000000 		.word	.LC1
+ 263              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 264              		.align	2
+ 265              	.LC0:
+ 266 0000 41545441 		.ascii	"ATTACK\000"
+ 266      434B00
+ 267 0007 00       		.space	1
+ 268              	.LC1:
+ 269 0008 44455649 		.ascii	"DEVICE\000"
+ 269      434500
+ 270 000f 00       		.space	1
+ 271              	.LC2:
+ 272 0010 48654152 		.ascii	"HeART\000"
+ 272      5400
+ 273 0016 0000     		.space	2
+ 274              	.LC3:
+ 275 0018 53544152 		.ascii	"START\000"
+ 275      5400
+ 276              		.bss
+ 277              		.align	2
+ 278              		.type	message, %object
+ 279              		.size	message, 100
+ 280              	message:
+ 281 0000 00000000 		.space	100
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 10
+
+
+ 281      00000000 
+ 281      00000000 
+ 281      00000000 
+ 281      00000000 
+ 282              		.text
+ 283              	.Letext0:
+ 284              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 285              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 286              		.file 4 "ErrorCodes.h"
+ 287              		.file 5 "Generated_Source\\PSoC5/cytypes.h"
+ 288              		.file 6 "global_variables.h"
+ 289              		.file 7 "Generated_Source\\PSoC5/core_cm3.h"
+ 290              		.file 8 "I2C_Interface.h"
+ 291              		.file 9 "Generated_Source\\PSoC5/UART_1.h"
+ 292              		.file 10 "Generated_Source\\PSoC5/isr_stream_1.h"
+ 293              		.file 11 "ssd1306.h"
+ 294              		.file 12 "Generated_Source\\PSoC5/EEPROM.h"
+ 295              		.file 13 "Generated_Source\\PSoC5/Timer_3.h"
+ 296              		.file 14 "Generated_Source\\PSoC5/Timer_30.h"
+ 297              		.file 15 "Generated_Source\\PSoC5/Timer_1H.h"
+ 298              		.file 16 "Generated_Source\\PSoC5/isr_Counter_3.h"
+ 299              		.file 17 "Generated_Source\\PSoC5/isr_Counter_30.h"
+ 300              		.file 18 "Generated_Source\\PSoC5/isr_Counter_1H.h"
+ 301              		.file 19 "Generated_Source\\PSoC5/CyLib.h"
+ 302              		.file 20 "Generated_Source\\PSoC5/LED_R.h"
+ 303              		.file 21 "Generated_Source\\PSoC5/LED_G.h"
+ 304              		.file 22 "Generated_Source\\PSoC5/LED_B.h"
+ 305              		.file 23 "InterruptRoutines.h"
+ 306              		.file 24 "Generated_Source\\PSoC5/isr_acc_1.h"
+ 307              		.file 25 "Generated_Source\\PSoC5/ADC_DelSig.h"
+ 308              		.file 26 "Generated_Source\\PSoC5/PWM_LED.h"
+ 309              		.section	.debug_info,"",%progbits
+ 310              	.Ldebug_info0:
+ 311 0000 BA050000 		.4byte	0x5ba
+ 312 0004 0400     		.2byte	0x4
+ 313 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 314 000a 04       		.byte	0x4
+ 315 000b 01       		.uleb128 0x1
+ 316 000c 39030000 		.4byte	.LASF62
+ 317 0010 0C       		.byte	0xc
+ 318 0011 91020000 		.4byte	.LASF63
+ 319 0015 DE030000 		.4byte	.LASF64
+ 320 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 321 001d 00000000 		.4byte	0
+ 322 0021 00000000 		.4byte	.Ldebug_line0
+ 323 0025 02       		.uleb128 0x2
+ 324 0026 01       		.byte	0x1
+ 325 0027 06       		.byte	0x6
+ 326 0028 AC010000 		.4byte	.LASF0
+ 327 002c 03       		.uleb128 0x3
+ 328 002d 4F010000 		.4byte	.LASF4
+ 329 0031 02       		.byte	0x2
+ 330 0032 1D       		.byte	0x1d
+ 331 0033 37000000 		.4byte	0x37
+ 332 0037 02       		.uleb128 0x2
+ 333 0038 01       		.byte	0x1
+ 334 0039 08       		.byte	0x8
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 11
+
+
+ 335 003a 89010000 		.4byte	.LASF1
+ 336 003e 02       		.uleb128 0x2
+ 337 003f 02       		.byte	0x2
+ 338 0040 05       		.byte	0x5
+ 339 0041 64000000 		.4byte	.LASF2
+ 340 0045 02       		.uleb128 0x2
+ 341 0046 02       		.byte	0x2
+ 342 0047 07       		.byte	0x7
+ 343 0048 38020000 		.4byte	.LASF3
+ 344 004c 03       		.uleb128 0x3
+ 345 004d B8020000 		.4byte	.LASF5
+ 346 0051 02       		.byte	0x2
+ 347 0052 3F       		.byte	0x3f
+ 348 0053 57000000 		.4byte	0x57
+ 349 0057 02       		.uleb128 0x2
+ 350 0058 04       		.byte	0x4
+ 351 0059 05       		.byte	0x5
+ 352 005a 28010000 		.4byte	.LASF6
+ 353 005e 02       		.uleb128 0x2
+ 354 005f 04       		.byte	0x4
+ 355 0060 07       		.byte	0x7
+ 356 0061 01020000 		.4byte	.LASF7
+ 357 0065 02       		.uleb128 0x2
+ 358 0066 08       		.byte	0x8
+ 359 0067 05       		.byte	0x5
+ 360 0068 08010000 		.4byte	.LASF8
+ 361 006c 02       		.uleb128 0x2
+ 362 006d 08       		.byte	0x8
+ 363 006e 07       		.byte	0x7
+ 364 006f B8010000 		.4byte	.LASF9
+ 365 0073 04       		.uleb128 0x4
+ 366 0074 04       		.byte	0x4
+ 367 0075 05       		.byte	0x5
+ 368 0076 696E7400 		.ascii	"int\000"
+ 369 007a 02       		.uleb128 0x2
+ 370 007b 04       		.byte	0x4
+ 371 007c 07       		.byte	0x7
+ 372 007d F4010000 		.4byte	.LASF10
+ 373 0081 02       		.uleb128 0x2
+ 374 0082 08       		.byte	0x8
+ 375 0083 04       		.byte	0x4
+ 376 0084 5F010000 		.4byte	.LASF11
+ 377 0088 02       		.uleb128 0x2
+ 378 0089 04       		.byte	0x4
+ 379 008a 07       		.byte	0x7
+ 380 008b 6E000000 		.4byte	.LASF12
+ 381 008f 05       		.uleb128 0x5
+ 382 0090 04       		.byte	0x4
+ 383 0091 95000000 		.4byte	0x95
+ 384 0095 02       		.uleb128 0x2
+ 385 0096 01       		.byte	0x1
+ 386 0097 08       		.byte	0x8
+ 387 0098 4B020000 		.4byte	.LASF13
+ 388 009c 03       		.uleb128 0x3
+ 389 009d CF000000 		.4byte	.LASF14
+ 390 00a1 03       		.byte	0x3
+ 391 00a2 18       		.byte	0x18
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 12
+
+
+ 392 00a3 2C000000 		.4byte	0x2c
+ 393 00a7 03       		.uleb128 0x3
+ 394 00a8 50020000 		.4byte	.LASF15
+ 395 00ac 03       		.byte	0x3
+ 396 00ad 2C       		.byte	0x2c
+ 397 00ae 4C000000 		.4byte	0x4c
+ 398 00b2 06       		.uleb128 0x6
+ 399 00b3 01       		.byte	0x1
+ 400 00b4 37000000 		.4byte	0x37
+ 401 00b8 04       		.byte	0x4
+ 402 00b9 15       		.byte	0x15
+ 403 00ba CB000000 		.4byte	0xcb
+ 404 00be 07       		.uleb128 0x7
+ 405 00bf 4B000000 		.4byte	.LASF16
+ 406 00c3 00       		.byte	0
+ 407 00c4 07       		.uleb128 0x7
+ 408 00c5 59010000 		.4byte	.LASF17
+ 409 00c9 01       		.byte	0x1
+ 410 00ca 00       		.byte	0
+ 411 00cb 03       		.uleb128 0x3
+ 412 00cc 30040000 		.4byte	.LASF18
+ 413 00d0 04       		.byte	0x4
+ 414 00d1 18       		.byte	0x18
+ 415 00d2 B2000000 		.4byte	0xb2
+ 416 00d6 08       		.uleb128 0x8
+ 417 00d7 7B020000 		.4byte	.LASF19
+ 418 00db 05       		.byte	0x5
+ 419 00dc E901     		.2byte	0x1e9
+ 420 00de 45000000 		.4byte	0x45
+ 421 00e2 02       		.uleb128 0x2
+ 422 00e3 04       		.byte	0x4
+ 423 00e4 04       		.byte	0x4
+ 424 00e5 02010000 		.4byte	.LASF20
+ 425 00e9 02       		.uleb128 0x2
+ 426 00ea 08       		.byte	0x8
+ 427 00eb 04       		.byte	0x4
+ 428 00ec A4020000 		.4byte	.LASF21
+ 429 00f0 09       		.uleb128 0x9
+ 430 00f1 A8000000 		.4byte	.LASF65
+ 431 00f5 01       		.byte	0x1
+ 432 00f6 2B       		.byte	0x2b
+ 433 00f7 73000000 		.4byte	0x73
+ 434 00fb 00000000 		.4byte	.LFB64
+ 435 00ff 48010000 		.4byte	.LFE64-.LFB64
+ 436 0103 01       		.uleb128 0x1
+ 437 0104 9C       		.byte	0x9c
+ 438 0105 81030000 		.4byte	0x381
+ 439 0109 0A       		.uleb128 0xa
+ 440 010a 16010000 		.4byte	.LASF66
+ 441 010e 01       		.byte	0x1
+ 442 010f DB       		.byte	0xdb
+ 443 0110 D6000000 		.4byte	0xd6
+ 444 0114 0A       		.byte	0xa
+ 445 0115 0B       		.uleb128 0xb
+ 446 0116 0A000000 		.4byte	.LVL0
+ 447 011a 9F040000 		.4byte	0x49f
+ 448 011e 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 13
+
+
+ 449 011f 0E000000 		.4byte	.LVL1
+ 450 0123 AA040000 		.4byte	0x4aa
+ 451 0127 0B       		.uleb128 0xb
+ 452 0128 14000000 		.4byte	.LVL2
+ 453 012c B5040000 		.4byte	0x4b5
+ 454 0130 0C       		.uleb128 0xc
+ 455 0131 1A000000 		.4byte	.LVL3
+ 456 0135 C0040000 		.4byte	0x4c0
+ 457 0139 44010000 		.4byte	0x144
+ 458 013d 0D       		.uleb128 0xd
+ 459 013e 01       		.uleb128 0x1
+ 460 013f 50       		.byte	0x50
+ 461 0140 02       		.uleb128 0x2
+ 462 0141 08       		.byte	0x8
+ 463 0142 3D       		.byte	0x3d
+ 464 0143 00       		.byte	0
+ 465 0144 0B       		.uleb128 0xb
+ 466 0145 1E000000 		.4byte	.LVL4
+ 467 0149 CB040000 		.4byte	0x4cb
+ 468 014d 0B       		.uleb128 0xb
+ 469 014e 22000000 		.4byte	.LVL5
+ 470 0152 D6040000 		.4byte	0x4d6
+ 471 0156 0B       		.uleb128 0xb
+ 472 0157 26000000 		.4byte	.LVL6
+ 473 015b E1040000 		.4byte	0x4e1
+ 474 015f 0B       		.uleb128 0xb
+ 475 0160 2A000000 		.4byte	.LVL7
+ 476 0164 EC040000 		.4byte	0x4ec
+ 477 0168 0B       		.uleb128 0xb
+ 478 0169 2E000000 		.4byte	.LVL8
+ 479 016d F7040000 		.4byte	0x4f7
+ 480 0171 0B       		.uleb128 0xb
+ 481 0172 32000000 		.4byte	.LVL9
+ 482 0176 02050000 		.4byte	0x502
+ 483 017a 0B       		.uleb128 0xb
+ 484 017b 36000000 		.4byte	.LVL10
+ 485 017f 0D050000 		.4byte	0x50d
+ 486 0183 0B       		.uleb128 0xb
+ 487 0184 3C000000 		.4byte	.LVL11
+ 488 0188 18050000 		.4byte	0x518
+ 489 018c 0B       		.uleb128 0xb
+ 490 018d 42000000 		.4byte	.LVL12
+ 491 0191 23050000 		.4byte	0x523
+ 492 0195 0B       		.uleb128 0xb
+ 493 0196 48000000 		.4byte	.LVL13
+ 494 019a 2E050000 		.4byte	0x52e
+ 495 019e 0C       		.uleb128 0xc
+ 496 019f 4E000000 		.4byte	.LVL14
+ 497 01a3 39050000 		.4byte	0x539
+ 498 01a7 B1010000 		.4byte	0x1b1
+ 499 01ab 0D       		.uleb128 0xd
+ 500 01ac 01       		.uleb128 0x1
+ 501 01ad 50       		.byte	0x50
+ 502 01ae 01       		.uleb128 0x1
+ 503 01af 35       		.byte	0x35
+ 504 01b0 00       		.byte	0
+ 505 01b1 0C       		.uleb128 0xc
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 14
+
+
+ 506 01b2 54000000 		.4byte	.LVL15
+ 507 01b6 44050000 		.4byte	0x544
+ 508 01ba C4010000 		.4byte	0x1c4
+ 509 01be 0D       		.uleb128 0xd
+ 510 01bf 01       		.uleb128 0x1
+ 511 01c0 50       		.byte	0x50
+ 512 01c1 01       		.uleb128 0x1
+ 513 01c2 30       		.byte	0x30
+ 514 01c3 00       		.byte	0
+ 515 01c4 0B       		.uleb128 0xb
+ 516 01c5 58000000 		.4byte	.LVL16
+ 517 01c9 4F050000 		.4byte	0x54f
+ 518 01cd 0C       		.uleb128 0xc
+ 519 01ce 5E000000 		.4byte	.LVL17
+ 520 01d2 44050000 		.4byte	0x544
+ 521 01d6 E0010000 		.4byte	0x1e0
+ 522 01da 0D       		.uleb128 0xd
+ 523 01db 01       		.uleb128 0x1
+ 524 01dc 50       		.byte	0x50
+ 525 01dd 01       		.uleb128 0x1
+ 526 01de 31       		.byte	0x31
+ 527 01df 00       		.byte	0
+ 528 01e0 0B       		.uleb128 0xb
+ 529 01e1 62000000 		.4byte	.LVL18
+ 530 01e5 5A050000 		.4byte	0x55a
+ 531 01e9 0C       		.uleb128 0xc
+ 532 01ea 68000000 		.4byte	.LVL19
+ 533 01ee 44050000 		.4byte	0x544
+ 534 01f2 FC010000 		.4byte	0x1fc
+ 535 01f6 0D       		.uleb128 0xd
+ 536 01f7 01       		.uleb128 0x1
+ 537 01f8 50       		.byte	0x50
+ 538 01f9 01       		.uleb128 0x1
+ 539 01fa 32       		.byte	0x32
+ 540 01fb 00       		.byte	0
+ 541 01fc 0B       		.uleb128 0xb
+ 542 01fd 6C000000 		.4byte	.LVL20
+ 543 0201 65050000 		.4byte	0x565
+ 544 0205 0C       		.uleb128 0xc
+ 545 0206 72000000 		.4byte	.LVL21
+ 546 020a 44050000 		.4byte	0x544
+ 547 020e 18020000 		.4byte	0x218
+ 548 0212 0D       		.uleb128 0xd
+ 549 0213 01       		.uleb128 0x1
+ 550 0214 50       		.byte	0x50
+ 551 0215 01       		.uleb128 0x1
+ 552 0216 34       		.byte	0x34
+ 553 0217 00       		.byte	0
+ 554 0218 0C       		.uleb128 0xc
+ 555 0219 7E000000 		.4byte	.LVL22
+ 556 021d 44050000 		.4byte	0x544
+ 557 0221 2B020000 		.4byte	0x22b
+ 558 0225 0D       		.uleb128 0xd
+ 559 0226 01       		.uleb128 0x1
+ 560 0227 50       		.byte	0x50
+ 561 0228 01       		.uleb128 0x1
+ 562 0229 34       		.byte	0x34
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 15
+
+
+ 563 022a 00       		.byte	0
+ 564 022b 0C       		.uleb128 0xc
+ 565 022c 94000000 		.4byte	.LVL23
+ 566 0230 70050000 		.4byte	0x570
+ 567 0234 58020000 		.4byte	0x258
+ 568 0238 0D       		.uleb128 0xd
+ 569 0239 01       		.uleb128 0x1
+ 570 023a 50       		.byte	0x50
+ 571 023b 02       		.uleb128 0x2
+ 572 023c 76       		.byte	0x76
+ 573 023d 00       		.sleb128 0
+ 574 023e 0D       		.uleb128 0xd
+ 575 023f 01       		.uleb128 0x1
+ 576 0240 52       		.byte	0x52
+ 577 0241 02       		.uleb128 0x2
+ 578 0242 08       		.byte	0x8
+ 579 0243 28       		.byte	0x28
+ 580 0244 0D       		.uleb128 0xd
+ 581 0245 01       		.uleb128 0x1
+ 582 0246 53       		.byte	0x53
+ 583 0247 01       		.uleb128 0x1
+ 584 0248 44       		.byte	0x44
+ 585 0249 0D       		.uleb128 0xd
+ 586 024a 02       		.uleb128 0x2
+ 587 024b 7D       		.byte	0x7d
+ 588 024c 00       		.sleb128 0
+ 589 024d 02       		.uleb128 0x2
+ 590 024e 75       		.byte	0x75
+ 591 024f 00       		.sleb128 0
+ 592 0250 0D       		.uleb128 0xd
+ 593 0251 02       		.uleb128 0x2
+ 594 0252 7D       		.byte	0x7d
+ 595 0253 04       		.sleb128 4
+ 596 0254 02       		.uleb128 0x2
+ 597 0255 08       		.byte	0x8
+ 598 0256 28       		.byte	0x28
+ 599 0257 00       		.byte	0
+ 600 0258 0C       		.uleb128 0xc
+ 601 0259 9E000000 		.4byte	.LVL24
+ 602 025d 7B050000 		.4byte	0x57b
+ 603 0261 76020000 		.4byte	0x276
+ 604 0265 0D       		.uleb128 0xd
+ 605 0266 01       		.uleb128 0x1
+ 606 0267 50       		.byte	0x50
+ 607 0268 01       		.uleb128 0x1
+ 608 0269 48       		.byte	0x48
+ 609 026a 0D       		.uleb128 0xd
+ 610 026b 01       		.uleb128 0x1
+ 611 026c 51       		.byte	0x51
+ 612 026d 02       		.uleb128 0x2
+ 613 026e 08       		.byte	0x8
+ 614 026f 2E       		.byte	0x2e
+ 615 0270 0D       		.uleb128 0xd
+ 616 0271 01       		.uleb128 0x1
+ 617 0272 52       		.byte	0x52
+ 618 0273 01       		.uleb128 0x1
+ 619 0274 30       		.byte	0x30
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 16
+
+
+ 620 0275 00       		.byte	0
+ 621 0276 0C       		.uleb128 0xc
+ 622 0277 AC000000 		.4byte	.LVL25
+ 623 027b 7B050000 		.4byte	0x57b
+ 624 027f 94020000 		.4byte	0x294
+ 625 0283 0D       		.uleb128 0xd
+ 626 0284 01       		.uleb128 0x1
+ 627 0285 50       		.byte	0x50
+ 628 0286 01       		.uleb128 0x1
+ 629 0287 48       		.byte	0x48
+ 630 0288 0D       		.uleb128 0xd
+ 631 0289 01       		.uleb128 0x1
+ 632 028a 51       		.byte	0x51
+ 633 028b 02       		.uleb128 0x2
+ 634 028c 08       		.byte	0x8
+ 635 028d 22       		.byte	0x22
+ 636 028e 0D       		.uleb128 0xd
+ 637 028f 01       		.uleb128 0x1
+ 638 0290 52       		.byte	0x52
+ 639 0291 01       		.uleb128 0x1
+ 640 0292 32       		.byte	0x32
+ 641 0293 00       		.byte	0
+ 642 0294 0C       		.uleb128 0xc
+ 643 0295 B4000000 		.4byte	.LVL26
+ 644 0299 44050000 		.4byte	0x544
+ 645 029d A7020000 		.4byte	0x2a7
+ 646 02a1 0D       		.uleb128 0xd
+ 647 02a2 01       		.uleb128 0x1
+ 648 02a3 50       		.byte	0x50
+ 649 02a4 01       		.uleb128 0x1
+ 650 02a5 36       		.byte	0x36
+ 651 02a6 00       		.byte	0
+ 652 02a7 0C       		.uleb128 0xc
+ 653 02a8 C2000000 		.4byte	.LVL27
+ 654 02ac 7B050000 		.4byte	0x57b
+ 655 02b0 C0020000 		.4byte	0x2c0
+ 656 02b4 0D       		.uleb128 0xd
+ 657 02b5 01       		.uleb128 0x1
+ 658 02b6 50       		.byte	0x50
+ 659 02b7 01       		.uleb128 0x1
+ 660 02b8 48       		.byte	0x48
+ 661 02b9 0D       		.uleb128 0xd
+ 662 02ba 01       		.uleb128 0x1
+ 663 02bb 51       		.byte	0x51
+ 664 02bc 02       		.uleb128 0x2
+ 665 02bd 75       		.byte	0x75
+ 666 02be 00       		.sleb128 0
+ 667 02bf 00       		.byte	0
+ 668 02c0 0C       		.uleb128 0xc
+ 669 02c1 CE000000 		.4byte	.LVL28
+ 670 02c5 7B050000 		.4byte	0x57b
+ 671 02c9 DF020000 		.4byte	0x2df
+ 672 02cd 0D       		.uleb128 0xd
+ 673 02ce 01       		.uleb128 0x1
+ 674 02cf 50       		.byte	0x50
+ 675 02d0 01       		.uleb128 0x1
+ 676 02d1 48       		.byte	0x48
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 17
+
+
+ 677 02d2 0D       		.uleb128 0xd
+ 678 02d3 01       		.uleb128 0x1
+ 679 02d4 51       		.byte	0x51
+ 680 02d5 02       		.uleb128 0x2
+ 681 02d6 08       		.byte	0x8
+ 682 02d7 24       		.byte	0x24
+ 683 02d8 0D       		.uleb128 0xd
+ 684 02d9 01       		.uleb128 0x1
+ 685 02da 52       		.byte	0x52
+ 686 02db 02       		.uleb128 0x2
+ 687 02dc 08       		.byte	0x8
+ 688 02dd 40       		.byte	0x40
+ 689 02de 00       		.byte	0
+ 690 02df 0C       		.uleb128 0xc
+ 691 02e0 D6000000 		.4byte	.LVL29
+ 692 02e4 44050000 		.4byte	0x544
+ 693 02e8 F2020000 		.4byte	0x2f2
+ 694 02ec 0D       		.uleb128 0xd
+ 695 02ed 01       		.uleb128 0x1
+ 696 02ee 50       		.byte	0x50
+ 697 02ef 01       		.uleb128 0x1
+ 698 02f0 37       		.byte	0x37
+ 699 02f1 00       		.byte	0
+ 700 02f2 0C       		.uleb128 0xc
+ 701 02f3 E6000000 		.4byte	.LVL30
+ 702 02f7 7B050000 		.4byte	0x57b
+ 703 02fb 0B030000 		.4byte	0x30b
+ 704 02ff 0D       		.uleb128 0xd
+ 705 0300 01       		.uleb128 0x1
+ 706 0301 50       		.byte	0x50
+ 707 0302 01       		.uleb128 0x1
+ 708 0303 48       		.byte	0x48
+ 709 0304 0D       		.uleb128 0xd
+ 710 0305 01       		.uleb128 0x1
+ 711 0306 51       		.byte	0x51
+ 712 0307 02       		.uleb128 0x2
+ 713 0308 08       		.byte	0x8
+ 714 0309 20       		.byte	0x20
+ 715 030a 00       		.byte	0
+ 716 030b 0C       		.uleb128 0xc
+ 717 030c F2000000 		.4byte	.LVL31
+ 718 0310 7B050000 		.4byte	0x57b
+ 719 0314 2A030000 		.4byte	0x32a
+ 720 0318 0D       		.uleb128 0xd
+ 721 0319 01       		.uleb128 0x1
+ 722 031a 50       		.byte	0x50
+ 723 031b 01       		.uleb128 0x1
+ 724 031c 48       		.byte	0x48
+ 725 031d 0D       		.uleb128 0xd
+ 726 031e 01       		.uleb128 0x1
+ 727 031f 51       		.byte	0x51
+ 728 0320 02       		.uleb128 0x2
+ 729 0321 08       		.byte	0x8
+ 730 0322 20       		.byte	0x20
+ 731 0323 0D       		.uleb128 0xd
+ 732 0324 01       		.uleb128 0x1
+ 733 0325 52       		.byte	0x52
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 18
+
+
+ 734 0326 02       		.uleb128 0x2
+ 735 0327 08       		.byte	0x8
+ 736 0328 47       		.byte	0x47
+ 737 0329 00       		.byte	0
+ 738 032a 0B       		.uleb128 0xb
+ 739 032b FA000000 		.4byte	.LVL32
+ 740 032f 86050000 		.4byte	0x586
+ 741 0333 0C       		.uleb128 0xc
+ 742 0334 04010000 		.4byte	.LVL33
+ 743 0338 7B050000 		.4byte	0x57b
+ 744 033c 52030000 		.4byte	0x352
+ 745 0340 0D       		.uleb128 0xd
+ 746 0341 01       		.uleb128 0x1
+ 747 0342 50       		.byte	0x50
+ 748 0343 01       		.uleb128 0x1
+ 749 0344 48       		.byte	0x48
+ 750 0345 0D       		.uleb128 0xd
+ 751 0346 01       		.uleb128 0x1
+ 752 0347 51       		.byte	0x51
+ 753 0348 02       		.uleb128 0x2
+ 754 0349 08       		.byte	0x8
+ 755 034a 2E       		.byte	0x2e
+ 756 034b 0D       		.uleb128 0xd
+ 757 034c 01       		.uleb128 0x1
+ 758 034d 52       		.byte	0x52
+ 759 034e 02       		.uleb128 0x2
+ 760 034f 09       		.byte	0x9
+ 761 0350 80       		.byte	0x80
+ 762 0351 00       		.byte	0
+ 763 0352 0B       		.uleb128 0xb
+ 764 0353 0A010000 		.4byte	.LVL34
+ 765 0357 91050000 		.4byte	0x591
+ 766 035b 0C       		.uleb128 0xc
+ 767 035c 10010000 		.4byte	.LVL35
+ 768 0360 9C050000 		.4byte	0x59c
+ 769 0364 6E030000 		.4byte	0x36e
+ 770 0368 0D       		.uleb128 0xd
+ 771 0369 01       		.uleb128 0x1
+ 772 036a 50       		.byte	0x50
+ 773 036b 01       		.uleb128 0x1
+ 774 036c 3A       		.byte	0x3a
+ 775 036d 00       		.byte	0
+ 776 036e 0B       		.uleb128 0xb
+ 777 036f 14010000 		.4byte	.LVL36
+ 778 0373 A7050000 		.4byte	0x5a7
+ 779 0377 0B       		.uleb128 0xb
+ 780 0378 18010000 		.4byte	.LVL37
+ 781 037c B2050000 		.4byte	0x5b2
+ 782 0380 00       		.byte	0
+ 783 0381 0E       		.uleb128 0xe
+ 784 0382 F0020000 		.4byte	.LASF22
+ 785 0386 06       		.byte	0x6
+ 786 0387 1B       		.byte	0x1b
+ 787 0388 73000000 		.4byte	0x73
+ 788 038c 05       		.uleb128 0x5
+ 789 038d 03       		.byte	0x3
+ 790 038e 00000000 		.4byte	ALARM_ENABLED
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 19
+
+
+ 791 0392 0E       		.uleb128 0xe
+ 792 0393 31010000 		.4byte	.LASF23
+ 793 0397 06       		.byte	0x6
+ 794 0398 1C       		.byte	0x1c
+ 795 0399 9C000000 		.4byte	0x9c
+ 796 039d 05       		.uleb128 0x5
+ 797 039e 03       		.byte	0x3
+ 798 039f 00000000 		.4byte	bit_resolution
+ 799 03a3 0E       		.uleb128 0xe
+ 800 03a4 3E000000 		.4byte	.LASF24
+ 801 03a8 06       		.byte	0x6
+ 802 03a9 1D       		.byte	0x1d
+ 803 03aa 9C000000 		.4byte	0x9c
+ 804 03ae 05       		.uleb128 0x5
+ 805 03af 03       		.byte	0x3
+ 806 03b0 00000000 		.4byte	g_resolution
+ 807 03b4 0E       		.uleb128 0xe
+ 808 03b5 C7030000 		.4byte	.LASF25
+ 809 03b9 06       		.byte	0x6
+ 810 03ba 1E       		.byte	0x1e
+ 811 03bb 9C000000 		.4byte	0x9c
+ 812 03bf 05       		.uleb128 0x5
+ 813 03c0 03       		.byte	0x3
+ 814 03c1 00000000 		.4byte	power_mode
+ 815 03c5 0F       		.uleb128 0xf
+ 816 03c6 9C000000 		.4byte	0x9c
+ 817 03ca D5030000 		.4byte	0x3d5
+ 818 03ce 10       		.uleb128 0x10
+ 819 03cf 88000000 		.4byte	0x88
+ 820 03d3 02       		.byte	0x2
+ 821 03d4 00       		.byte	0
+ 822 03d5 0E       		.uleb128 0xe
+ 823 03d6 97010000 		.4byte	.LASF26
+ 824 03da 06       		.byte	0x6
+ 825 03db 1F       		.byte	0x1f
+ 826 03dc C5030000 		.4byte	0x3c5
+ 827 03e0 05       		.uleb128 0x5
+ 828 03e1 03       		.byte	0x3
+ 829 03e2 00000000 		.4byte	Bit_ResolutionBuffer
+ 830 03e6 0E       		.uleb128 0xe
+ 831 03e7 86000000 		.4byte	.LASF27
+ 832 03eb 06       		.byte	0x6
+ 833 03ec 20       		.byte	0x20
+ 834 03ed C5030000 		.4byte	0x3c5
+ 835 03f1 05       		.uleb128 0x5
+ 836 03f2 03       		.byte	0x3
+ 837 03f3 00000000 		.4byte	G_ResolutionBuffer
+ 838 03f7 0E       		.uleb128 0xe
+ 839 03f8 99000000 		.4byte	.LASF28
+ 840 03fc 06       		.byte	0x6
+ 841 03fd 21       		.byte	0x21
+ 842 03fe C5030000 		.4byte	0x3c5
+ 843 0402 05       		.uleb128 0x5
+ 844 0403 03       		.byte	0x3
+ 845 0404 00000000 		.4byte	LowPowerBuffer
+ 846 0408 0E       		.uleb128 0xe
+ 847 0409 40010000 		.4byte	.LASF29
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 20
+
+
+ 848 040d 06       		.byte	0x6
+ 849 040e 22       		.byte	0x22
+ 850 040f 9C000000 		.4byte	0x9c
+ 851 0413 05       		.uleb128 0x5
+ 852 0414 03       		.byte	0x3
+ 853 0415 00000000 		.4byte	CtrlReg1Config
+ 854 0419 0E       		.uleb128 0xe
+ 855 041a 15000000 		.4byte	.LASF30
+ 856 041e 06       		.byte	0x6
+ 857 041f 23       		.byte	0x23
+ 858 0420 9C000000 		.4byte	0x9c
+ 859 0424 05       		.uleb128 0x5
+ 860 0425 03       		.byte	0x3
+ 861 0426 00000000 		.4byte	CtrlReg4Config
+ 862 042a 0E       		.uleb128 0xe
+ 863 042b 10030000 		.4byte	.LASF31
+ 864 042f 06       		.byte	0x6
+ 865 0430 24       		.byte	0x24
+ 866 0431 CB000000 		.4byte	0xcb
+ 867 0435 05       		.uleb128 0x5
+ 868 0436 03       		.byte	0x3
+ 869 0437 00000000 		.4byte	error
+ 870 043b 11       		.uleb128 0x11
+ 871 043c 2C030000 		.4byte	.LASF32
+ 872 0440 07       		.byte	0x7
+ 873 0441 1207     		.2byte	0x712
+ 874 0443 47040000 		.4byte	0x447
+ 875 0447 12       		.uleb128 0x12
+ 876 0448 A7000000 		.4byte	0xa7
+ 877 044c 0F       		.uleb128 0xf
+ 878 044d 95000000 		.4byte	0x95
+ 879 0451 5C040000 		.4byte	0x45c
+ 880 0455 10       		.uleb128 0x10
+ 881 0456 88000000 		.4byte	0x88
+ 882 045a 63       		.byte	0x63
+ 883 045b 00       		.byte	0
+ 884 045c 0E       		.uleb128 0xe
+ 885 045d AD000000 		.4byte	.LASF33
+ 886 0461 01       		.byte	0x1
+ 887 0462 20       		.byte	0x20
+ 888 0463 4C040000 		.4byte	0x44c
+ 889 0467 05       		.uleb128 0x5
+ 890 0468 03       		.byte	0x3
+ 891 0469 00000000 		.4byte	message
+ 892 046d 0F       		.uleb128 0xf
+ 893 046e 8F000000 		.4byte	0x8f
+ 894 0472 7D040000 		.4byte	0x47d
+ 895 0476 10       		.uleb128 0x10
+ 896 0477 88000000 		.4byte	0x88
+ 897 047b 01       		.byte	0x1
+ 898 047c 00       		.byte	0
+ 899 047d 0E       		.uleb128 0xe
+ 900 047e 3A040000 		.4byte	.LASF34
+ 901 0482 01       		.byte	0x1
+ 902 0483 22       		.byte	0x22
+ 903 0484 6D040000 		.4byte	0x46d
+ 904 0488 05       		.uleb128 0x5
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 21
+
+
+ 905 0489 03       		.byte	0x3
+ 906 048a 00000000 		.4byte	stringList_1
+ 907 048e 0E       		.uleb128 0xe
+ 908 048f 47040000 		.4byte	.LASF35
+ 909 0493 01       		.byte	0x1
+ 910 0494 26       		.byte	0x26
+ 911 0495 6D040000 		.4byte	0x46d
+ 912 0499 05       		.uleb128 0x5
+ 913 049a 03       		.byte	0x3
+ 914 049b 00000000 		.4byte	stringList_2
+ 915 049f 13       		.uleb128 0x13
+ 916 04a0 23020000 		.4byte	.LASF36
+ 917 04a4 23020000 		.4byte	.LASF36
+ 918 04a8 08       		.byte	0x8
+ 919 04a9 17       		.byte	0x17
+ 920 04aa 13       		.uleb128 0x13
+ 921 04ab F5000000 		.4byte	.LASF37
+ 922 04af F5000000 		.4byte	.LASF37
+ 923 04b3 09       		.byte	0x9
+ 924 04b4 54       		.byte	0x54
+ 925 04b5 13       		.uleb128 0x13
+ 926 04b6 00000000 		.4byte	.LASF38
+ 927 04ba 00000000 		.4byte	.LASF38
+ 928 04be 0A       		.byte	0xa
+ 929 04bf 18       		.byte	0x18
+ 930 04c0 13       		.uleb128 0x13
+ 931 04c1 7C010000 		.4byte	.LASF39
+ 932 04c5 7C010000 		.4byte	.LASF39
+ 933 04c9 0B       		.byte	0xb
+ 934 04ca 34       		.byte	0x34
+ 935 04cb 13       		.uleb128 0x13
+ 936 04cc 58020000 		.4byte	.LASF40
+ 937 04d0 58020000 		.4byte	.LASF40
+ 938 04d4 0C       		.byte	0xc
+ 939 04d5 1F       		.byte	0x1f
+ 940 04d6 13       		.uleb128 0x13
+ 941 04d7 AB020000 		.4byte	.LASF41
+ 942 04db AB020000 		.4byte	.LASF41
+ 943 04df 0D       		.byte	0xd
+ 944 04e0 8A       		.byte	0x8a
+ 945 04e1 13       		.uleb128 0x13
+ 946 04e2 82020000 		.4byte	.LASF42
+ 947 04e6 82020000 		.4byte	.LASF42
+ 948 04ea 0D       		.byte	0xd
+ 949 04eb 8B       		.byte	0x8b
+ 950 04ec 13       		.uleb128 0x13
+ 951 04ed E7000000 		.4byte	.LASF43
+ 952 04f1 E7000000 		.4byte	.LASF43
+ 953 04f5 0E       		.byte	0xe
+ 954 04f6 8A       		.byte	0x8a
+ 955 04f7 13       		.uleb128 0x13
+ 956 04f8 13020000 		.4byte	.LASF44
+ 957 04fc 13020000 		.4byte	.LASF44
+ 958 0500 0E       		.byte	0xe
+ 959 0501 8B       		.byte	0x8b
+ 960 0502 13       		.uleb128 0x13
+ 961 0503 24000000 		.4byte	.LASF45
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 22
+
+
+ 962 0507 24000000 		.4byte	.LASF45
+ 963 050b 0F       		.byte	0xf
+ 964 050c 8A       		.byte	0x8a
+ 965 050d 13       		.uleb128 0x13
+ 966 050e D7000000 		.4byte	.LASF46
+ 967 0512 D7000000 		.4byte	.LASF46
+ 968 0516 0F       		.byte	0xf
+ 969 0517 8B       		.byte	0x8b
+ 970 0518 13       		.uleb128 0x13
+ 971 0519 16030000 		.4byte	.LASF47
+ 972 051d 16030000 		.4byte	.LASF47
+ 973 0521 10       		.byte	0x10
+ 974 0522 18       		.byte	0x18
+ 975 0523 13       		.uleb128 0x13
+ 976 0524 C2020000 		.4byte	.LASF48
+ 977 0528 C2020000 		.4byte	.LASF48
+ 978 052c 11       		.byte	0x11
+ 979 052d 18       		.byte	0x18
+ 980 052e 13       		.uleb128 0x13
+ 981 052f D9020000 		.4byte	.LASF49
+ 982 0533 D9020000 		.4byte	.LASF49
+ 983 0537 12       		.byte	0x12
+ 984 0538 18       		.byte	0x18
+ 985 0539 13       		.uleb128 0x13
+ 986 053a EC010000 		.4byte	.LASF50
+ 987 053e EC010000 		.4byte	.LASF50
+ 988 0542 13       		.byte	0x13
+ 989 0543 76       		.byte	0x76
+ 990 0544 13       		.uleb128 0x13
+ 991 0545 54000000 		.4byte	.LASF51
+ 992 0549 54000000 		.4byte	.LASF51
+ 993 054d 0C       		.byte	0xc
+ 994 054e 23       		.byte	0x23
+ 995 054f 13       		.uleb128 0x13
+ 996 0550 C3000000 		.4byte	.LASF52
+ 997 0554 C3000000 		.4byte	.LASF52
+ 998 0558 14       		.byte	0x14
+ 999 0559 26       		.byte	0x26
+ 1000 055a 13       		.uleb128 0x13
+ 1001 055b 98020000 		.4byte	.LASF53
+ 1002 055f 98020000 		.4byte	.LASF53
+ 1003 0563 15       		.byte	0x15
+ 1004 0564 26       		.byte	0x26
+ 1005 0565 13       		.uleb128 0x13
+ 1006 0566 32000000 		.4byte	.LASF54
+ 1007 056a 32000000 		.4byte	.LASF54
+ 1008 056e 16       		.byte	0x16
+ 1009 056f 26       		.byte	0x26
+ 1010 0570 13       		.uleb128 0x13
+ 1011 0571 D2030000 		.4byte	.LASF55
+ 1012 0575 D2030000 		.4byte	.LASF55
+ 1013 0579 17       		.byte	0x17
+ 1014 057a 1C       		.byte	0x1c
+ 1015 057b 13       		.uleb128 0x13
+ 1016 057c CF010000 		.4byte	.LASF56
+ 1017 0580 CF010000 		.4byte	.LASF56
+ 1018 0584 08       		.byte	0x8
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 23
+
+
+ 1019 0585 43       		.byte	0x43
+ 1020 0586 13       		.uleb128 0x13
+ 1021 0587 FE020000 		.4byte	.LASF57
+ 1022 058b FE020000 		.4byte	.LASF57
+ 1023 058f 18       		.byte	0x18
+ 1024 0590 18       		.byte	0x18
+ 1025 0591 13       		.uleb128 0x13
+ 1026 0592 77000000 		.4byte	.LASF58
+ 1027 0596 77000000 		.4byte	.LASF58
+ 1028 059a 0F       		.byte	0xf
+ 1029 059b 5A       		.byte	0x5a
+ 1030 059c 13       		.uleb128 0x13
+ 1031 059d 65020000 		.4byte	.LASF59
+ 1032 05a1 65020000 		.4byte	.LASF59
+ 1033 05a5 0F       		.byte	0xf
+ 1034 05a6 6A       		.byte	0x6a
+ 1035 05a7 13       		.uleb128 0x13
+ 1036 05a8 6B010000 		.4byte	.LASF60
+ 1037 05ac 6B010000 		.4byte	.LASF60
+ 1038 05b0 19       		.byte	0x19
+ 1039 05b1 3A       		.byte	0x3a
+ 1040 05b2 13       		.uleb128 0x13
+ 1041 05b3 B5000000 		.4byte	.LASF61
+ 1042 05b7 B5000000 		.4byte	.LASF61
+ 1043 05bb 1A       		.byte	0x1a
+ 1044 05bc 92       		.byte	0x92
+ 1045 05bd 00       		.byte	0
+ 1046              		.section	.debug_abbrev,"",%progbits
+ 1047              	.Ldebug_abbrev0:
+ 1048 0000 01       		.uleb128 0x1
+ 1049 0001 11       		.uleb128 0x11
+ 1050 0002 01       		.byte	0x1
+ 1051 0003 25       		.uleb128 0x25
+ 1052 0004 0E       		.uleb128 0xe
+ 1053 0005 13       		.uleb128 0x13
+ 1054 0006 0B       		.uleb128 0xb
+ 1055 0007 03       		.uleb128 0x3
+ 1056 0008 0E       		.uleb128 0xe
+ 1057 0009 1B       		.uleb128 0x1b
+ 1058 000a 0E       		.uleb128 0xe
+ 1059 000b 55       		.uleb128 0x55
+ 1060 000c 17       		.uleb128 0x17
+ 1061 000d 11       		.uleb128 0x11
+ 1062 000e 01       		.uleb128 0x1
+ 1063 000f 10       		.uleb128 0x10
+ 1064 0010 17       		.uleb128 0x17
+ 1065 0011 00       		.byte	0
+ 1066 0012 00       		.byte	0
+ 1067 0013 02       		.uleb128 0x2
+ 1068 0014 24       		.uleb128 0x24
+ 1069 0015 00       		.byte	0
+ 1070 0016 0B       		.uleb128 0xb
+ 1071 0017 0B       		.uleb128 0xb
+ 1072 0018 3E       		.uleb128 0x3e
+ 1073 0019 0B       		.uleb128 0xb
+ 1074 001a 03       		.uleb128 0x3
+ 1075 001b 0E       		.uleb128 0xe
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 24
+
+
+ 1076 001c 00       		.byte	0
+ 1077 001d 00       		.byte	0
+ 1078 001e 03       		.uleb128 0x3
+ 1079 001f 16       		.uleb128 0x16
+ 1080 0020 00       		.byte	0
+ 1081 0021 03       		.uleb128 0x3
+ 1082 0022 0E       		.uleb128 0xe
+ 1083 0023 3A       		.uleb128 0x3a
+ 1084 0024 0B       		.uleb128 0xb
+ 1085 0025 3B       		.uleb128 0x3b
+ 1086 0026 0B       		.uleb128 0xb
+ 1087 0027 49       		.uleb128 0x49
+ 1088 0028 13       		.uleb128 0x13
+ 1089 0029 00       		.byte	0
+ 1090 002a 00       		.byte	0
+ 1091 002b 04       		.uleb128 0x4
+ 1092 002c 24       		.uleb128 0x24
+ 1093 002d 00       		.byte	0
+ 1094 002e 0B       		.uleb128 0xb
+ 1095 002f 0B       		.uleb128 0xb
+ 1096 0030 3E       		.uleb128 0x3e
+ 1097 0031 0B       		.uleb128 0xb
+ 1098 0032 03       		.uleb128 0x3
+ 1099 0033 08       		.uleb128 0x8
+ 1100 0034 00       		.byte	0
+ 1101 0035 00       		.byte	0
+ 1102 0036 05       		.uleb128 0x5
+ 1103 0037 0F       		.uleb128 0xf
+ 1104 0038 00       		.byte	0
+ 1105 0039 0B       		.uleb128 0xb
+ 1106 003a 0B       		.uleb128 0xb
+ 1107 003b 49       		.uleb128 0x49
+ 1108 003c 13       		.uleb128 0x13
+ 1109 003d 00       		.byte	0
+ 1110 003e 00       		.byte	0
+ 1111 003f 06       		.uleb128 0x6
+ 1112 0040 04       		.uleb128 0x4
+ 1113 0041 01       		.byte	0x1
+ 1114 0042 0B       		.uleb128 0xb
+ 1115 0043 0B       		.uleb128 0xb
+ 1116 0044 49       		.uleb128 0x49
+ 1117 0045 13       		.uleb128 0x13
+ 1118 0046 3A       		.uleb128 0x3a
+ 1119 0047 0B       		.uleb128 0xb
+ 1120 0048 3B       		.uleb128 0x3b
+ 1121 0049 0B       		.uleb128 0xb
+ 1122 004a 01       		.uleb128 0x1
+ 1123 004b 13       		.uleb128 0x13
+ 1124 004c 00       		.byte	0
+ 1125 004d 00       		.byte	0
+ 1126 004e 07       		.uleb128 0x7
+ 1127 004f 28       		.uleb128 0x28
+ 1128 0050 00       		.byte	0
+ 1129 0051 03       		.uleb128 0x3
+ 1130 0052 0E       		.uleb128 0xe
+ 1131 0053 1C       		.uleb128 0x1c
+ 1132 0054 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 25
+
+
+ 1133 0055 00       		.byte	0
+ 1134 0056 00       		.byte	0
+ 1135 0057 08       		.uleb128 0x8
+ 1136 0058 16       		.uleb128 0x16
+ 1137 0059 00       		.byte	0
+ 1138 005a 03       		.uleb128 0x3
+ 1139 005b 0E       		.uleb128 0xe
+ 1140 005c 3A       		.uleb128 0x3a
+ 1141 005d 0B       		.uleb128 0xb
+ 1142 005e 3B       		.uleb128 0x3b
+ 1143 005f 05       		.uleb128 0x5
+ 1144 0060 49       		.uleb128 0x49
+ 1145 0061 13       		.uleb128 0x13
+ 1146 0062 00       		.byte	0
+ 1147 0063 00       		.byte	0
+ 1148 0064 09       		.uleb128 0x9
+ 1149 0065 2E       		.uleb128 0x2e
+ 1150 0066 01       		.byte	0x1
+ 1151 0067 3F       		.uleb128 0x3f
+ 1152 0068 19       		.uleb128 0x19
+ 1153 0069 03       		.uleb128 0x3
+ 1154 006a 0E       		.uleb128 0xe
+ 1155 006b 3A       		.uleb128 0x3a
+ 1156 006c 0B       		.uleb128 0xb
+ 1157 006d 3B       		.uleb128 0x3b
+ 1158 006e 0B       		.uleb128 0xb
+ 1159 006f 27       		.uleb128 0x27
+ 1160 0070 19       		.uleb128 0x19
+ 1161 0071 49       		.uleb128 0x49
+ 1162 0072 13       		.uleb128 0x13
+ 1163 0073 8701     		.uleb128 0x87
+ 1164 0075 19       		.uleb128 0x19
+ 1165 0076 11       		.uleb128 0x11
+ 1166 0077 01       		.uleb128 0x1
+ 1167 0078 12       		.uleb128 0x12
+ 1168 0079 06       		.uleb128 0x6
+ 1169 007a 40       		.uleb128 0x40
+ 1170 007b 18       		.uleb128 0x18
+ 1171 007c 9742     		.uleb128 0x2117
+ 1172 007e 19       		.uleb128 0x19
+ 1173 007f 01       		.uleb128 0x1
+ 1174 0080 13       		.uleb128 0x13
+ 1175 0081 00       		.byte	0
+ 1176 0082 00       		.byte	0
+ 1177 0083 0A       		.uleb128 0xa
+ 1178 0084 34       		.uleb128 0x34
+ 1179 0085 00       		.byte	0
+ 1180 0086 03       		.uleb128 0x3
+ 1181 0087 0E       		.uleb128 0xe
+ 1182 0088 3A       		.uleb128 0x3a
+ 1183 0089 0B       		.uleb128 0xb
+ 1184 008a 3B       		.uleb128 0x3b
+ 1185 008b 0B       		.uleb128 0xb
+ 1186 008c 49       		.uleb128 0x49
+ 1187 008d 13       		.uleb128 0x13
+ 1188 008e 1C       		.uleb128 0x1c
+ 1189 008f 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 26
+
+
+ 1190 0090 00       		.byte	0
+ 1191 0091 00       		.byte	0
+ 1192 0092 0B       		.uleb128 0xb
+ 1193 0093 898201   		.uleb128 0x4109
+ 1194 0096 00       		.byte	0
+ 1195 0097 11       		.uleb128 0x11
+ 1196 0098 01       		.uleb128 0x1
+ 1197 0099 31       		.uleb128 0x31
+ 1198 009a 13       		.uleb128 0x13
+ 1199 009b 00       		.byte	0
+ 1200 009c 00       		.byte	0
+ 1201 009d 0C       		.uleb128 0xc
+ 1202 009e 898201   		.uleb128 0x4109
+ 1203 00a1 01       		.byte	0x1
+ 1204 00a2 11       		.uleb128 0x11
+ 1205 00a3 01       		.uleb128 0x1
+ 1206 00a4 31       		.uleb128 0x31
+ 1207 00a5 13       		.uleb128 0x13
+ 1208 00a6 01       		.uleb128 0x1
+ 1209 00a7 13       		.uleb128 0x13
+ 1210 00a8 00       		.byte	0
+ 1211 00a9 00       		.byte	0
+ 1212 00aa 0D       		.uleb128 0xd
+ 1213 00ab 8A8201   		.uleb128 0x410a
+ 1214 00ae 00       		.byte	0
+ 1215 00af 02       		.uleb128 0x2
+ 1216 00b0 18       		.uleb128 0x18
+ 1217 00b1 9142     		.uleb128 0x2111
+ 1218 00b3 18       		.uleb128 0x18
+ 1219 00b4 00       		.byte	0
+ 1220 00b5 00       		.byte	0
+ 1221 00b6 0E       		.uleb128 0xe
+ 1222 00b7 34       		.uleb128 0x34
+ 1223 00b8 00       		.byte	0
+ 1224 00b9 03       		.uleb128 0x3
+ 1225 00ba 0E       		.uleb128 0xe
+ 1226 00bb 3A       		.uleb128 0x3a
+ 1227 00bc 0B       		.uleb128 0xb
+ 1228 00bd 3B       		.uleb128 0x3b
+ 1229 00be 0B       		.uleb128 0xb
+ 1230 00bf 49       		.uleb128 0x49
+ 1231 00c0 13       		.uleb128 0x13
+ 1232 00c1 3F       		.uleb128 0x3f
+ 1233 00c2 19       		.uleb128 0x19
+ 1234 00c3 02       		.uleb128 0x2
+ 1235 00c4 18       		.uleb128 0x18
+ 1236 00c5 00       		.byte	0
+ 1237 00c6 00       		.byte	0
+ 1238 00c7 0F       		.uleb128 0xf
+ 1239 00c8 01       		.uleb128 0x1
+ 1240 00c9 01       		.byte	0x1
+ 1241 00ca 49       		.uleb128 0x49
+ 1242 00cb 13       		.uleb128 0x13
+ 1243 00cc 01       		.uleb128 0x1
+ 1244 00cd 13       		.uleb128 0x13
+ 1245 00ce 00       		.byte	0
+ 1246 00cf 00       		.byte	0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 27
+
+
+ 1247 00d0 10       		.uleb128 0x10
+ 1248 00d1 21       		.uleb128 0x21
+ 1249 00d2 00       		.byte	0
+ 1250 00d3 49       		.uleb128 0x49
+ 1251 00d4 13       		.uleb128 0x13
+ 1252 00d5 2F       		.uleb128 0x2f
+ 1253 00d6 0B       		.uleb128 0xb
+ 1254 00d7 00       		.byte	0
+ 1255 00d8 00       		.byte	0
+ 1256 00d9 11       		.uleb128 0x11
+ 1257 00da 34       		.uleb128 0x34
+ 1258 00db 00       		.byte	0
+ 1259 00dc 03       		.uleb128 0x3
+ 1260 00dd 0E       		.uleb128 0xe
+ 1261 00de 3A       		.uleb128 0x3a
+ 1262 00df 0B       		.uleb128 0xb
+ 1263 00e0 3B       		.uleb128 0x3b
+ 1264 00e1 05       		.uleb128 0x5
+ 1265 00e2 49       		.uleb128 0x49
+ 1266 00e3 13       		.uleb128 0x13
+ 1267 00e4 3F       		.uleb128 0x3f
+ 1268 00e5 19       		.uleb128 0x19
+ 1269 00e6 3C       		.uleb128 0x3c
+ 1270 00e7 19       		.uleb128 0x19
+ 1271 00e8 00       		.byte	0
+ 1272 00e9 00       		.byte	0
+ 1273 00ea 12       		.uleb128 0x12
+ 1274 00eb 35       		.uleb128 0x35
+ 1275 00ec 00       		.byte	0
+ 1276 00ed 49       		.uleb128 0x49
+ 1277 00ee 13       		.uleb128 0x13
+ 1278 00ef 00       		.byte	0
+ 1279 00f0 00       		.byte	0
+ 1280 00f1 13       		.uleb128 0x13
+ 1281 00f2 2E       		.uleb128 0x2e
+ 1282 00f3 00       		.byte	0
+ 1283 00f4 3F       		.uleb128 0x3f
+ 1284 00f5 19       		.uleb128 0x19
+ 1285 00f6 3C       		.uleb128 0x3c
+ 1286 00f7 19       		.uleb128 0x19
+ 1287 00f8 6E       		.uleb128 0x6e
+ 1288 00f9 0E       		.uleb128 0xe
+ 1289 00fa 03       		.uleb128 0x3
+ 1290 00fb 0E       		.uleb128 0xe
+ 1291 00fc 3A       		.uleb128 0x3a
+ 1292 00fd 0B       		.uleb128 0xb
+ 1293 00fe 3B       		.uleb128 0x3b
+ 1294 00ff 0B       		.uleb128 0xb
+ 1295 0100 00       		.byte	0
+ 1296 0101 00       		.byte	0
+ 1297 0102 00       		.byte	0
+ 1298              		.section	.debug_aranges,"",%progbits
+ 1299 0000 1C000000 		.4byte	0x1c
+ 1300 0004 0200     		.2byte	0x2
+ 1301 0006 00000000 		.4byte	.Ldebug_info0
+ 1302 000a 04       		.byte	0x4
+ 1303 000b 00       		.byte	0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 28
+
+
+ 1304 000c 0000     		.2byte	0
+ 1305 000e 0000     		.2byte	0
+ 1306 0010 00000000 		.4byte	.LFB64
+ 1307 0014 48010000 		.4byte	.LFE64-.LFB64
+ 1308 0018 00000000 		.4byte	0
+ 1309 001c 00000000 		.4byte	0
+ 1310              		.section	.debug_ranges,"",%progbits
+ 1311              	.Ldebug_ranges0:
+ 1312 0000 00000000 		.4byte	.LFB64
+ 1313 0004 48010000 		.4byte	.LFE64
+ 1314 0008 00000000 		.4byte	0
+ 1315 000c 00000000 		.4byte	0
+ 1316              		.section	.debug_line,"",%progbits
+ 1317              	.Ldebug_line0:
+ 1318 0000 D8020000 		.section	.debug_str,"MS",%progbits,1
+ 1318      02008F02 
+ 1318      00000201 
+ 1318      FB0E0D00 
+ 1318      01010101 
+ 1319              	.LASF38:
+ 1320 0000 6973725F 		.ascii	"isr_stream_1_StartEx\000"
+ 1320      73747265 
+ 1320      616D5F31 
+ 1320      5F537461 
+ 1320      72744578 
+ 1321              	.LASF30:
+ 1322 0015 4374726C 		.ascii	"CtrlReg4Config\000"
+ 1322      52656734 
+ 1322      436F6E66 
+ 1322      696700
+ 1323              	.LASF45:
+ 1324 0024 54696D65 		.ascii	"Timer_1H_Init\000"
+ 1324      725F3148 
+ 1324      5F496E69 
+ 1324      7400
+ 1325              	.LASF54:
+ 1326 0032 4C45445F 		.ascii	"LED_B_Write\000"
+ 1326      425F5772 
+ 1326      69746500 
+ 1327              	.LASF24:
+ 1328 003e 675F7265 		.ascii	"g_resolution\000"
+ 1328      736F6C75 
+ 1328      74696F6E 
+ 1328      00
+ 1329              	.LASF16:
+ 1330 004b 4E4F5F45 		.ascii	"NO_ERROR\000"
+ 1330      52524F52 
+ 1330      00
+ 1331              	.LASF51:
+ 1332 0054 45455052 		.ascii	"EEPROM_ReadByte\000"
+ 1332      4F4D5F52 
+ 1332      65616442 
+ 1332      79746500 
+ 1333              	.LASF2:
+ 1334 0064 73686F72 		.ascii	"short int\000"
+ 1334      7420696E 
+ 1334      7400
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 29
+
+
+ 1335              	.LASF12:
+ 1336 006e 73697A65 		.ascii	"sizetype\000"
+ 1336      74797065 
+ 1336      00
+ 1337              	.LASF58:
+ 1338 0077 54696D65 		.ascii	"Timer_1H_Start\000"
+ 1338      725F3148 
+ 1338      5F537461 
+ 1338      727400
+ 1339              	.LASF27:
+ 1340 0086 475F5265 		.ascii	"G_ResolutionBuffer\000"
+ 1340      736F6C75 
+ 1340      74696F6E 
+ 1340      42756666 
+ 1340      657200
+ 1341              	.LASF28:
+ 1342 0099 4C6F7750 		.ascii	"LowPowerBuffer\000"
+ 1342      6F776572 
+ 1342      42756666 
+ 1342      657200
+ 1343              	.LASF65:
+ 1344 00a8 6D61696E 		.ascii	"main\000"
+ 1344      00
+ 1345              	.LASF33:
+ 1346 00ad 6D657373 		.ascii	"message\000"
+ 1346      61676500 
+ 1347              	.LASF61:
+ 1348 00b5 50574D5F 		.ascii	"PWM_LED_Start\000"
+ 1348      4C45445F 
+ 1348      53746172 
+ 1348      7400
+ 1349              	.LASF52:
+ 1350 00c3 4C45445F 		.ascii	"LED_R_Write\000"
+ 1350      525F5772 
+ 1350      69746500 
+ 1351              	.LASF14:
+ 1352 00cf 75696E74 		.ascii	"uint8_t\000"
+ 1352      385F7400 
+ 1353              	.LASF46:
+ 1354 00d7 54696D65 		.ascii	"Timer_1H_Enable\000"
+ 1354      725F3148 
+ 1354      5F456E61 
+ 1354      626C6500 
+ 1355              	.LASF43:
+ 1356 00e7 54696D65 		.ascii	"Timer_30_Init\000"
+ 1356      725F3330 
+ 1356      5F496E69 
+ 1356      7400
+ 1357              	.LASF37:
+ 1358 00f5 55415254 		.ascii	"UART_1_Start\000"
+ 1358      5F315F53 
+ 1358      74617274 
+ 1358      00
+ 1359              	.LASF20:
+ 1360 0102 666C6F61 		.ascii	"float\000"
+ 1360      7400
+ 1361              	.LASF8:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 30
+
+
+ 1362 0108 6C6F6E67 		.ascii	"long long int\000"
+ 1362      206C6F6E 
+ 1362      6720696E 
+ 1362      7400
+ 1363              	.LASF66:
+ 1364 0116 73746172 		.ascii	"start_counter_bat\000"
+ 1364      745F636F 
+ 1364      756E7465 
+ 1364      725F6261 
+ 1364      7400
+ 1365              	.LASF6:
+ 1366 0128 6C6F6E67 		.ascii	"long int\000"
+ 1366      20696E74 
+ 1366      00
+ 1367              	.LASF23:
+ 1368 0131 6269745F 		.ascii	"bit_resolution\000"
+ 1368      7265736F 
+ 1368      6C757469 
+ 1368      6F6E00
+ 1369              	.LASF29:
+ 1370 0140 4374726C 		.ascii	"CtrlReg1Config\000"
+ 1370      52656731 
+ 1370      436F6E66 
+ 1370      696700
+ 1371              	.LASF4:
+ 1372 014f 5F5F7569 		.ascii	"__uint8_t\000"
+ 1372      6E74385F 
+ 1372      7400
+ 1373              	.LASF17:
+ 1374 0159 4552524F 		.ascii	"ERROR\000"
+ 1374      5200
+ 1375              	.LASF11:
+ 1376 015f 6C6F6E67 		.ascii	"long double\000"
+ 1376      20646F75 
+ 1376      626C6500 
+ 1377              	.LASF60:
+ 1378 016b 4144435F 		.ascii	"ADC_DelSig_Start\000"
+ 1378      44656C53 
+ 1378      69675F53 
+ 1378      74617274 
+ 1378      00
+ 1379              	.LASF39:
+ 1380 017c 64697370 		.ascii	"display_init\000"
+ 1380      6C61795F 
+ 1380      696E6974 
+ 1380      00
+ 1381              	.LASF1:
+ 1382 0189 756E7369 		.ascii	"unsigned char\000"
+ 1382      676E6564 
+ 1382      20636861 
+ 1382      7200
+ 1383              	.LASF26:
+ 1384 0197 4269745F 		.ascii	"Bit_ResolutionBuffer\000"
+ 1384      5265736F 
+ 1384      6C757469 
+ 1384      6F6E4275 
+ 1384      66666572 
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 31
+
+
+ 1385              	.LASF0:
+ 1386 01ac 7369676E 		.ascii	"signed char\000"
+ 1386      65642063 
+ 1386      68617200 
+ 1387              	.LASF9:
+ 1388 01b8 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1388      206C6F6E 
+ 1388      6720756E 
+ 1388      7369676E 
+ 1388      65642069 
+ 1389              	.LASF56:
+ 1390 01cf 4932435F 		.ascii	"I2C_Peripheral_WriteRegister\000"
+ 1390      50657269 
+ 1390      70686572 
+ 1390      616C5F57 
+ 1390      72697465 
+ 1391              	.LASF50:
+ 1392 01ec 43794465 		.ascii	"CyDelay\000"
+ 1392      6C617900 
+ 1393              	.LASF10:
+ 1394 01f4 756E7369 		.ascii	"unsigned int\000"
+ 1394      676E6564 
+ 1394      20696E74 
+ 1394      00
+ 1395              	.LASF7:
+ 1396 0201 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1396      20756E73 
+ 1396      69676E65 
+ 1396      6420696E 
+ 1396      7400
+ 1397              	.LASF44:
+ 1398 0213 54696D65 		.ascii	"Timer_30_Enable\000"
+ 1398      725F3330 
+ 1398      5F456E61 
+ 1398      626C6500 
+ 1399              	.LASF36:
+ 1400 0223 4932435F 		.ascii	"I2C_Peripheral_Start\000"
+ 1400      50657269 
+ 1400      70686572 
+ 1400      616C5F53 
+ 1400      74617274 
+ 1401              	.LASF3:
+ 1402 0238 73686F72 		.ascii	"short unsigned int\000"
+ 1402      7420756E 
+ 1402      7369676E 
+ 1402      65642069 
+ 1402      6E7400
+ 1403              	.LASF13:
+ 1404 024b 63686172 		.ascii	"char\000"
+ 1404      00
+ 1405              	.LASF15:
+ 1406 0250 696E7433 		.ascii	"int32_t\000"
+ 1406      325F7400 
+ 1407              	.LASF40:
+ 1408 0258 45455052 		.ascii	"EEPROM_Start\000"
+ 1408      4F4D5F53 
+ 1408      74617274 
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 32
+
+
+ 1408      00
+ 1409              	.LASF59:
+ 1410 0265 54696D65 		.ascii	"Timer_1H_WriteCounter\000"
+ 1410      725F3148 
+ 1410      5F577269 
+ 1410      7465436F 
+ 1410      756E7465 
+ 1411              	.LASF19:
+ 1412 027b 75696E74 		.ascii	"uint16\000"
+ 1412      313600
+ 1413              	.LASF42:
+ 1414 0282 54696D65 		.ascii	"Timer_3_Enable\000"
+ 1414      725F335F 
+ 1414      456E6162 
+ 1414      6C6500
+ 1415              	.LASF63:
+ 1416 0291 6D61696E 		.ascii	"main.c\000"
+ 1416      2E6300
+ 1417              	.LASF53:
+ 1418 0298 4C45445F 		.ascii	"LED_G_Write\000"
+ 1418      475F5772 
+ 1418      69746500 
+ 1419              	.LASF21:
+ 1420 02a4 646F7562 		.ascii	"double\000"
+ 1420      6C6500
+ 1421              	.LASF41:
+ 1422 02ab 54696D65 		.ascii	"Timer_3_Init\000"
+ 1422      725F335F 
+ 1422      496E6974 
+ 1422      00
+ 1423              	.LASF5:
+ 1424 02b8 5F5F696E 		.ascii	"__int32_t\000"
+ 1424      7433325F 
+ 1424      7400
+ 1425              	.LASF48:
+ 1426 02c2 6973725F 		.ascii	"isr_Counter_30_StartEx\000"
+ 1426      436F756E 
+ 1426      7465725F 
+ 1426      33305F53 
+ 1426      74617274 
+ 1427              	.LASF49:
+ 1428 02d9 6973725F 		.ascii	"isr_Counter_1H_StartEx\000"
+ 1428      436F756E 
+ 1428      7465725F 
+ 1428      31485F53 
+ 1428      74617274 
+ 1429              	.LASF22:
+ 1430 02f0 414C4152 		.ascii	"ALARM_ENABLED\000"
+ 1430      4D5F454E 
+ 1430      41424C45 
+ 1430      4400
+ 1431              	.LASF57:
+ 1432 02fe 6973725F 		.ascii	"isr_acc_1_StartEx\000"
+ 1432      6163635F 
+ 1432      315F5374 
+ 1432      61727445 
+ 1432      7800
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 33
+
+
+ 1433              	.LASF31:
+ 1434 0310 6572726F 		.ascii	"error\000"
+ 1434      7200
+ 1435              	.LASF47:
+ 1436 0316 6973725F 		.ascii	"isr_Counter_3_StartEx\000"
+ 1436      436F756E 
+ 1436      7465725F 
+ 1436      335F5374 
+ 1436      61727445 
+ 1437              	.LASF32:
+ 1438 032c 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1438      52784275 
+ 1438      66666572 
+ 1438      00
+ 1439              	.LASF62:
+ 1440 0339 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1440      43313120 
+ 1440      352E342E 
+ 1440      31203230 
+ 1440      31363036 
+ 1441 036c 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1441      20726576 
+ 1441      6973696F 
+ 1441      6E203233 
+ 1441      37373135 
+ 1442 039f 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1442      66756E63 
+ 1442      74696F6E 
+ 1442      2D736563 
+ 1442      74696F6E 
+ 1443              	.LASF25:
+ 1444 03c7 706F7765 		.ascii	"power_mode\000"
+ 1444      725F6D6F 
+ 1444      646500
+ 1445              	.LASF55:
+ 1446 03d2 75706461 		.ascii	"update_oled\000"
+ 1446      74655F6F 
+ 1446      6C656400 
+ 1447              	.LASF64:
+ 1448 03de 433A5C55 		.ascii	"C:\\Users\\Matteo\\Desktop\\New folder\\AY2324_I_Pr"
+ 1448      73657273 
+ 1448      5C4D6174 
+ 1448      74656F5C 
+ 1448      4465736B 
+ 1449 040c 6F6A6563 		.ascii	"oject-6\\PSoC_Code\\Stream mode.cydsn\000"
+ 1449      742D365C 
+ 1449      50536F43 
+ 1449      5F436F64 
+ 1449      655C5374 
+ 1450              	.LASF18:
+ 1451 0430 4572726F 		.ascii	"ErrorCode\000"
+ 1451      72436F64 
+ 1451      6500
+ 1452              	.LASF34:
+ 1453 043a 73747269 		.ascii	"stringList_1\000"
+ 1453      6E674C69 
+ 1453      73745F31 
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccvDShDg.s 			page 34
+
+
+ 1453      00
+ 1454              	.LASF35:
+ 1455 0447 73747269 		.ascii	"stringList_2\000"
+ 1455      6E674C69 
+ 1455      73745F32 
+ 1455      00
+ 1456              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

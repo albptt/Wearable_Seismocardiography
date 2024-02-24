@@ -1,0 +1,32 @@
+### PSoC Creator ###
+
+# project settings
+*.cyprj.*
+*.cywrk.*
+
+# generated assets and resources
+Docs/
+Release/
+Export/
+*/Generated_Source
+*/CortexM3
+*/codegentemp
+*_timing.html
+**.cydsn/*timing.html
+*.svd
+*.rpt
+*.cyfit
+*.cycdx
+*.log
+*.tmp
+*.txt
+*.pdf
+*_datasheet.pdf
+*.DS_Store
+
+# personal files
+
+*.Alberto Pettenella
+*.pc
+*.Matteo
+*.annas

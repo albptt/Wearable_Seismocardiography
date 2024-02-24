@@ -1,0 +1,1809 @@
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"I2C_Interface.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.I2C_Peripheral_Start,"ax",%progbits
+  20              		.align	2
+  21              		.global	I2C_Peripheral_Start
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	I2C_Peripheral_Start, %function
+  25              	I2C_Peripheral_Start:
+  26              	.LFB0:
+  27              		.file 1 "I2C_Interface.c"
+   1:I2C_Interface.c **** /* ========================================
+   2:I2C_Interface.c ****  *
+   3:I2C_Interface.c ****  * Politecnico di Milano 
+   4:I2C_Interface.c ****  * LTEBS A.Y. 2023/24 
+   5:I2C_Interface.c ****  * Mentasti, Pettenella, Salama, Vacca
+   6:I2C_Interface.c ****  *
+   7:I2C_Interface.c ****  * ========================================
+   8:I2C_Interface.c **** */
+   9:I2C_Interface.c **** 
+  10:I2C_Interface.c **** /*
+  11:I2C_Interface.c **** * This file includes all the required source code to interface
+  12:I2C_Interface.c **** * the I2C peripheral.
+  13:I2C_Interface.c **** */
+  14:I2C_Interface.c **** 
+  15:I2C_Interface.c **** /**
+  16:I2C_Interface.c **** *   \brief Value returned if device present on I2C bus.
+  17:I2C_Interface.c **** */
+  18:I2C_Interface.c **** #ifndef DEVICE_CONNECTED
+  19:I2C_Interface.c ****     #define DEVICE_CONNECTED 1
+  20:I2C_Interface.c **** #endif
+  21:I2C_Interface.c **** 
+  22:I2C_Interface.c **** /**
+  23:I2C_Interface.c **** *   \brief Value returned if device not present on I2C bus.
+  24:I2C_Interface.c **** */
+  25:I2C_Interface.c **** #ifndef DEVICE_UNCONNECTED
+  26:I2C_Interface.c ****     #define DEVICE_UNCONNECTED 0
+  27:I2C_Interface.c **** #endif
+  28:I2C_Interface.c **** 
+  29:I2C_Interface.c **** #include "I2C_Interface.h" 
+  30:I2C_Interface.c **** #include "I2C_Master.h"
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 2
+
+
+  31:I2C_Interface.c **** 
+  32:I2C_Interface.c **** ErrorCode I2C_Peripheral_Start(void) 
+  33:I2C_Interface.c **** {
+  28              		.loc 1 33 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 08B5     		push	{r3, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 3, -8
+  35              		.cfi_offset 14, -4
+  34:I2C_Interface.c ****     // Start I2C peripheral
+  35:I2C_Interface.c ****     I2C_Master_Start();  
+  36              		.loc 1 35 0
+  37 0002 FFF7FEFF 		bl	I2C_Master_Start
+  38              	.LVL0:
+  36:I2C_Interface.c ****     
+  37:I2C_Interface.c ****     // Return no error since start function does not return any error
+  38:I2C_Interface.c ****     return NO_ERROR;
+  39:I2C_Interface.c **** }
+  39              		.loc 1 39 0
+  40 0006 0020     		movs	r0, #0
+  41 0008 08BD     		pop	{r3, pc}
+  42              		.cfi_endproc
+  43              	.LFE0:
+  44              		.size	I2C_Peripheral_Start, .-I2C_Peripheral_Start
+  45 000a 00BF     		.section	.text.I2C_Peripheral_Stop,"ax",%progbits
+  46              		.align	2
+  47              		.global	I2C_Peripheral_Stop
+  48              		.thumb
+  49              		.thumb_func
+  50              		.type	I2C_Peripheral_Stop, %function
+  51              	I2C_Peripheral_Stop:
+  52              	.LFB1:
+  40:I2C_Interface.c **** 
+  41:I2C_Interface.c **** // --------------------------------------------------------------------------------- //
+  42:I2C_Interface.c **** 
+  43:I2C_Interface.c **** ErrorCode I2C_Peripheral_Stop(void)
+  44:I2C_Interface.c **** {
+  53              		.loc 1 44 0
+  54              		.cfi_startproc
+  55              		@ args = 0, pretend = 0, frame = 0
+  56              		@ frame_needed = 0, uses_anonymous_args = 0
+  57 0000 08B5     		push	{r3, lr}
+  58              		.cfi_def_cfa_offset 8
+  59              		.cfi_offset 3, -8
+  60              		.cfi_offset 14, -4
+  45:I2C_Interface.c ****     // Stop I2C peripheral
+  46:I2C_Interface.c ****     I2C_Master_Stop();
+  61              		.loc 1 46 0
+  62 0002 FFF7FEFF 		bl	I2C_Master_Stop
+  63              	.LVL1:
+  47:I2C_Interface.c ****     // Return no error since stop function does not return any error
+  48:I2C_Interface.c ****     return NO_ERROR;
+  49:I2C_Interface.c **** }
+  64              		.loc 1 49 0
+  65 0006 0020     		movs	r0, #0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 3
+
+
+  66 0008 08BD     		pop	{r3, pc}
+  67              		.cfi_endproc
+  68              	.LFE1:
+  69              		.size	I2C_Peripheral_Stop, .-I2C_Peripheral_Stop
+  70 000a 00BF     		.section	.text.I2C_Peripheral_ReadRegister,"ax",%progbits
+  71              		.align	2
+  72              		.global	I2C_Peripheral_ReadRegister
+  73              		.thumb
+  74              		.thumb_func
+  75              		.type	I2C_Peripheral_ReadRegister, %function
+  76              	I2C_Peripheral_ReadRegister:
+  77              	.LFB2:
+  50:I2C_Interface.c **** 
+  51:I2C_Interface.c **** // --------------------------------------------------------------------------------- //
+  52:I2C_Interface.c **** // I2C_Peripheral_ReadRegister funzione per leggere registri
+  53:I2C_Interface.c **** // richiede indirizzo dello slave, indirizzo del registro interno allo slave e variabile in cui ver
+  54:I2C_Interface.c **** ErrorCode I2C_Peripheral_ReadRegister(uint8_t device_address, 
+  55:I2C_Interface.c ****                                       uint8_t register_address,
+  56:I2C_Interface.c ****                                       uint8_t* data) {
+  78              		.loc 1 56 0
+  79              		.cfi_startproc
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82              	.LVL2:
+  83 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  84              		.cfi_def_cfa_offset 24
+  85              		.cfi_offset 3, -24
+  86              		.cfi_offset 4, -20
+  87              		.cfi_offset 5, -16
+  88              		.cfi_offset 6, -12
+  89              		.cfi_offset 7, -8
+  90              		.cfi_offset 14, -4
+  91 0002 0646     		mov	r6, r0
+  92 0004 0D46     		mov	r5, r1
+  93 0006 1746     		mov	r7, r2
+  57:I2C_Interface.c ****     // ad ogni if controllo che non si sia verificato errore
+  58:I2C_Interface.c ****     // Start Condition
+  59:I2C_Interface.c ****     //I2C_Master_MasterSendStart() manda uno start signal al device interpellato e assieme ad esso 
+  60:I2C_Interface.c ****     uint8_t error = I2C_Master_MasterSendStart(device_address, I2C_Master_WRITE_XFER_MODE);        
+  94              		.loc 1 60 0
+  95 0008 0021     		movs	r1, #0
+  96              	.LVL3:
+  97 000a FFF7FEFF 		bl	I2C_Master_MasterSendStart
+  98              	.LVL4:
+  61:I2C_Interface.c ****     if (error == I2C_Master_MSTR_NO_ERROR)
+  99              		.loc 1 61 0
+ 100 000e 0446     		mov	r4, r0
+ 101 0010 68B9     		cbnz	r0, .L6
+  62:I2C_Interface.c ****     {
+  63:I2C_Interface.c ****         //Write the register address to be read
+  64:I2C_Interface.c ****         //I2C_Master_MasterWriteByte() scrive indirizzo del registro
+  65:I2C_Interface.c ****         error = I2C_Master_MasterWriteByte(register_address);
+ 102              		.loc 1 65 0
+ 103 0012 2846     		mov	r0, r5
+ 104              	.LVL5:
+ 105 0014 FFF7FEFF 		bl	I2C_Master_MasterWriteByte
+ 106              	.LVL6:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 4
+
+
+  66:I2C_Interface.c ****         if (error == I2C_Master_MSTR_NO_ERROR)
+ 107              		.loc 1 66 0
+ 108 0018 0446     		mov	r4, r0
+ 109 001a 40B9     		cbnz	r0, .L6
+  67:I2C_Interface.c ****         {
+  68:I2C_Interface.c ****             // Send a restart condition
+  69:I2C_Interface.c ****             // mando il repeated start
+  70:I2C_Interface.c ****             error = I2C_Master_MasterSendRestart(device_address, I2C_Master_READ_XFER_MODE);
+ 110              		.loc 1 70 0
+ 111 001c 0121     		movs	r1, #1
+ 112 001e 3046     		mov	r0, r6
+ 113              	.LVL7:
+ 114 0020 FFF7FEFF 		bl	I2C_Master_MasterSendRestart
+ 115              	.LVL8:
+  71:I2C_Interface.c ****             if (error == I2C_Master_MSTR_NO_ERROR)
+ 116              		.loc 1 71 0
+ 117 0024 0446     		mov	r4, r0
+ 118 0026 10B9     		cbnz	r0, .L6
+  72:I2C_Interface.c ****             {   //leggo il byte salvandolo all'interno della variabile di cui ho passato il puntato
+  73:I2C_Interface.c ****                 *data = I2C_Master_MasterReadByte(I2C_Master_NAK_DATA);
+ 119              		.loc 1 73 0
+ 120 0028 FFF7FEFF 		bl	I2C_Master_MasterReadByte
+ 121              	.LVL9:
+ 122 002c 3870     		strb	r0, [r7]
+ 123              	.L6:
+ 124              	.LVL10:
+  74:I2C_Interface.c ****             }
+  75:I2C_Interface.c ****         }
+  76:I2C_Interface.c ****     }
+  77:I2C_Interface.c ****     // Stop Comunication
+  78:I2C_Interface.c ****     I2C_Master_MasterSendStop();
+ 125              		.loc 1 78 0
+ 126 002e FFF7FEFF 		bl	I2C_Master_MasterSendStop
+ 127              	.LVL11:
+  79:I2C_Interface.c ****     //Return
+  80:I2C_Interface.c ****     return error ? ERROR : NO_ERROR;
+  81:I2C_Interface.c ****     // ritorna errore se funzione e` andata incontro ad errore durante lo svolgimento, questo corri
+  82:I2C_Interface.c ****     // no error corrisponde invece a acknowledgement
+  83:I2C_Interface.c **** }
+ 128              		.loc 1 83 0
+ 129 0032 201C     		adds	r0, r4, #0
+ 130 0034 18BF     		it	ne
+ 131 0036 0120     		movne	r0, #1
+ 132 0038 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 133              		.cfi_endproc
+ 134              	.LFE2:
+ 135              		.size	I2C_Peripheral_ReadRegister, .-I2C_Peripheral_ReadRegister
+ 136 003a 00BF     		.section	.text.I2C_Peripheral_ReadRegisterMulti,"ax",%progbits
+ 137              		.align	2
+ 138              		.global	I2C_Peripheral_ReadRegisterMulti
+ 139              		.thumb
+ 140              		.thumb_func
+ 141              		.type	I2C_Peripheral_ReadRegisterMulti, %function
+ 142              	I2C_Peripheral_ReadRegisterMulti:
+ 143              	.LFB3:
+  84:I2C_Interface.c ****                                     
+  85:I2C_Interface.c **** // --------------------------------------------------------------------------------- //
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 5
+
+
+  86:I2C_Interface.c **** 
+  87:I2C_Interface.c **** ErrorCode I2C_Peripheral_ReadRegisterMulti(uint8_t device_address,
+  88:I2C_Interface.c ****                                            uint8_t register_address,
+  89:I2C_Interface.c ****                                            uint8_t register_count,
+  90:I2C_Interface.c ****                                            uint8_t* data) {
+ 144              		.loc 1 90 0
+ 145              		.cfi_startproc
+ 146              		@ args = 0, pretend = 0, frame = 0
+ 147              		@ frame_needed = 0, uses_anonymous_args = 0
+ 148              	.LVL12:
+ 149 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 150              		.cfi_def_cfa_offset 24
+ 151              		.cfi_offset 4, -24
+ 152              		.cfi_offset 5, -20
+ 153              		.cfi_offset 6, -16
+ 154              		.cfi_offset 7, -12
+ 155              		.cfi_offset 8, -8
+ 156              		.cfi_offset 14, -4
+ 157 0004 8046     		mov	r8, r0
+ 158 0006 0C46     		mov	r4, r1
+ 159 0008 1646     		mov	r6, r2
+ 160 000a 1F46     		mov	r7, r3
+  91:I2C_Interface.c ****     
+  92:I2C_Interface.c ****     // Send start condition
+  93:I2C_Interface.c ****     uint8_t error = I2C_Master_MasterSendStart(device_address, I2C_Master_WRITE_XFER_MODE);
+ 161              		.loc 1 93 0
+ 162 000c 0021     		movs	r1, #0
+ 163              	.LVL13:
+ 164 000e FFF7FEFF 		bl	I2C_Master_MasterSendStart
+ 165              	.LVL14:
+  94:I2C_Interface.c ****     if (error == I2C_Master_MSTR_NO_ERROR)
+ 166              		.loc 1 94 0
+ 167 0012 0546     		mov	r5, r0
+ 168 0014 F0B9     		cbnz	r0, .L9
+ 169              	.LVL15:
+  95:I2C_Interface.c ****     {
+  96:I2C_Interface.c ****         // Write register address to be read with the MSB = 1
+  97:I2C_Interface.c ****         register_address |= 0x80; //Datasheet indication for multi read -- autoincrement
+  98:I2C_Interface.c ****         error = I2C_Master_MasterWriteByte(register_address);
+ 170              		.loc 1 98 0
+ 171 0016 44F08000 		orr	r0, r4, #128
+ 172              	.LVL16:
+ 173 001a FFF7FEFF 		bl	I2C_Master_MasterWriteByte
+ 174              	.LVL17:
+  99:I2C_Interface.c ****         if (error == I2C_Master_MSTR_NO_ERROR)
+ 175              		.loc 1 99 0
+ 176 001e 0546     		mov	r5, r0
+ 177 0020 C0B9     		cbnz	r0, .L9
+ 100:I2C_Interface.c ****         {
+ 101:I2C_Interface.c ****             // Send Restart condition
+ 102:I2C_Interface.c ****             error = I2C_Master_MasterSendRestart(device_address, I2C_Master_READ_XFER_MODE);
+ 178              		.loc 1 102 0
+ 179 0022 0121     		movs	r1, #1
+ 180 0024 4046     		mov	r0, r8
+ 181              	.LVL18:
+ 182 0026 FFF7FEFF 		bl	I2C_Master_MasterSendRestart
+ 183              	.LVL19:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 6
+
+
+ 103:I2C_Interface.c ****             if (error == I2C_Master_MSTR_NO_ERROR)
+ 184              		.loc 1 103 0
+ 185 002a 0546     		mov	r5, r0
+ 186 002c 50B1     		cbz	r0, .L12
+ 187 002e 11E0     		b	.L9
+ 188              	.LVL20:
+ 189              	.L11:
+ 190              	.LBB2:
+ 104:I2C_Interface.c ****             {
+ 105:I2C_Interface.c ****                 // Continue to read until we have register to be read
+ 106:I2C_Interface.c ****                 uint8_t counter = register_count;
+ 107:I2C_Interface.c ****                 while (counter > 1)
+ 108:I2C_Interface.c ****                 {
+ 109:I2C_Interface.c ****                     data[register_count - counter] = 
+ 191              		.loc 1 109 0
+ 192 0030 C4EB0608 		rsb	r8, r4, r6
+ 110:I2C_Interface.c ****                         I2C_Master_MasterReadByte(I2C_Master_ACK_DATA);
+ 193              		.loc 1 110 0
+ 194 0034 0120     		movs	r0, #1
+ 195 0036 FFF7FEFF 		bl	I2C_Master_MasterReadByte
+ 196              	.LVL21:
+ 109:I2C_Interface.c ****                         I2C_Master_MasterReadByte(I2C_Master_ACK_DATA);
+ 197              		.loc 1 109 0
+ 198 003a 07F80800 		strb	r0, [r7, r8]
+ 111:I2C_Interface.c ****                         counter --;
+ 199              		.loc 1 111 0
+ 200 003e 013C     		subs	r4, r4, #1
+ 201              	.LVL22:
+ 202 0040 E4B2     		uxtb	r4, r4
+ 203              	.LVL23:
+ 204 0042 00E0     		b	.L10
+ 205              	.LVL24:
+ 206              	.L12:
+ 207              	.LBE2:
+ 208 0044 3446     		mov	r4, r6
+ 209              	.LVL25:
+ 210              	.L10:
+ 211              	.LBB3:
+ 107:I2C_Interface.c ****                 {
+ 212              		.loc 1 107 0
+ 213 0046 012C     		cmp	r4, #1
+ 214 0048 F2D8     		bhi	.L11
+ 112:I2C_Interface.c ****                 }
+ 113:I2C_Interface.c ****                 // Read last data without acknolowledgment
+ 114:I2C_Interface.c ****                 data[register_count - 1] = 
+ 215              		.loc 1 114 0
+ 216 004a 013E     		subs	r6, r6, #1
+ 115:I2C_Interface.c ****                     I2C_Master_MasterReadByte(I2C_Master_NAK_DATA);
+ 217              		.loc 1 115 0
+ 218 004c 0020     		movs	r0, #0
+ 219 004e FFF7FEFF 		bl	I2C_Master_MasterReadByte
+ 220              	.LVL26:
+ 114:I2C_Interface.c ****                     I2C_Master_MasterReadByte(I2C_Master_NAK_DATA);
+ 221              		.loc 1 114 0
+ 222 0052 B855     		strb	r0, [r7, r6]
+ 223              	.LVL27:
+ 224              	.L9:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 7
+
+
+ 225              	.LBE3:
+ 116:I2C_Interface.c ****             }
+ 117:I2C_Interface.c ****         }
+ 118:I2C_Interface.c ****     }
+ 119:I2C_Interface.c ****     // Send Stop Condition
+ 120:I2C_Interface.c ****     I2C_Master_MasterSendStop();
+ 226              		.loc 1 120 0
+ 227 0054 FFF7FEFF 		bl	I2C_Master_MasterSendStop
+ 228              	.LVL28:
+ 121:I2C_Interface.c ****     // Return Error Code
+ 122:I2C_Interface.c ****     return error ? ERROR : NO_ERROR;
+ 123:I2C_Interface.c ****                                               
+ 124:I2C_Interface.c **** }
+ 229              		.loc 1 124 0
+ 230 0058 281C     		adds	r0, r5, #0
+ 231 005a 18BF     		it	ne
+ 232 005c 0120     		movne	r0, #1
+ 233 005e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 234              		.cfi_endproc
+ 235              	.LFE3:
+ 236              		.size	I2C_Peripheral_ReadRegisterMulti, .-I2C_Peripheral_ReadRegisterMulti
+ 237 0062 00BF     		.section	.text.I2C_Peripheral_WriteRegister,"ax",%progbits
+ 238              		.align	2
+ 239              		.global	I2C_Peripheral_WriteRegister
+ 240              		.thumb
+ 241              		.thumb_func
+ 242              		.type	I2C_Peripheral_WriteRegister, %function
+ 243              	I2C_Peripheral_WriteRegister:
+ 244              	.LFB4:
+ 125:I2C_Interface.c ****                                         
+ 126:I2C_Interface.c **** // --------------------------------------------------------------------------------- //
+ 127:I2C_Interface.c **** 
+ 128:I2C_Interface.c **** ErrorCode I2C_Peripheral_WriteRegister(uint8_t device_address,
+ 129:I2C_Interface.c ****                                        uint8_t register_address,
+ 130:I2C_Interface.c ****                                        uint8_t data) {
+ 245              		.loc 1 130 0
+ 246              		.cfi_startproc
+ 247              		@ args = 0, pretend = 0, frame = 0
+ 248              		@ frame_needed = 0, uses_anonymous_args = 0
+ 249              	.LVL29:
+ 250 0000 70B5     		push	{r4, r5, r6, lr}
+ 251              		.cfi_def_cfa_offset 16
+ 252              		.cfi_offset 4, -16
+ 253              		.cfi_offset 5, -12
+ 254              		.cfi_offset 6, -8
+ 255              		.cfi_offset 14, -4
+ 256 0002 0D46     		mov	r5, r1
+ 257 0004 1646     		mov	r6, r2
+ 131:I2C_Interface.c ****     
+ 132:I2C_Interface.c ****     
+ 133:I2C_Interface.c ****     // Send Start Condition
+ 134:I2C_Interface.c ****     uint8_t error = I2C_Master_MasterSendStart(device_address, I2C_Master_WRITE_XFER_MODE);
+ 258              		.loc 1 134 0
+ 259 0006 0021     		movs	r1, #0
+ 260              	.LVL30:
+ 261 0008 FFF7FEFF 		bl	I2C_Master_MasterSendStart
+ 262              	.LVL31:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 8
+
+
+ 135:I2C_Interface.c ****     if (error == I2C_Master_MSTR_NO_ERROR)
+ 263              		.loc 1 135 0
+ 264 000c 0446     		mov	r4, r0
+ 265 000e 40B9     		cbnz	r0, .L15
+ 136:I2C_Interface.c ****     {
+ 137:I2C_Interface.c ****         //Write Register Address (to be overwritten)
+ 138:I2C_Interface.c ****         error = I2C_Master_MasterWriteByte(register_address);
+ 266              		.loc 1 138 0
+ 267 0010 2846     		mov	r0, r5
+ 268              	.LVL32:
+ 269 0012 FFF7FEFF 		bl	I2C_Master_MasterWriteByte
+ 270              	.LVL33:
+ 139:I2C_Interface.c ****         if (error == I2C_Master_MSTR_NO_ERROR)
+ 271              		.loc 1 139 0
+ 272 0016 0446     		mov	r4, r0
+ 273 0018 18B9     		cbnz	r0, .L15
+ 140:I2C_Interface.c ****         {
+ 141:I2C_Interface.c ****             // Write Byte
+ 142:I2C_Interface.c ****             error = I2C_Master_MasterWriteByte(data);
+ 274              		.loc 1 142 0
+ 275 001a 3046     		mov	r0, r6
+ 276              	.LVL34:
+ 277 001c FFF7FEFF 		bl	I2C_Master_MasterWriteByte
+ 278              	.LVL35:
+ 279 0020 0446     		mov	r4, r0
+ 280              	.LVL36:
+ 281              	.L15:
+ 143:I2C_Interface.c ****         }
+ 144:I2C_Interface.c ****     }
+ 145:I2C_Interface.c ****     // Close Communication
+ 146:I2C_Interface.c ****     I2C_Master_MasterSendStop();
+ 282              		.loc 1 146 0
+ 283 0022 FFF7FEFF 		bl	I2C_Master_MasterSendStop
+ 284              	.LVL37:
+ 147:I2C_Interface.c ****     // Return
+ 148:I2C_Interface.c ****     return error ? ERROR : NO_ERROR;
+ 149:I2C_Interface.c **** }
+ 285              		.loc 1 149 0
+ 286 0026 201C     		adds	r0, r4, #0
+ 287 0028 18BF     		it	ne
+ 288 002a 0120     		movne	r0, #1
+ 289 002c 70BD     		pop	{r4, r5, r6, pc}
+ 290              		.cfi_endproc
+ 291              	.LFE4:
+ 292              		.size	I2C_Peripheral_WriteRegister, .-I2C_Peripheral_WriteRegister
+ 293 002e 00BF     		.section	.text.I2C_Peripheral_IsDeviceConnected,"ax",%progbits
+ 294              		.align	2
+ 295              		.global	I2C_Peripheral_IsDeviceConnected
+ 296              		.thumb
+ 297              		.thumb_func
+ 298              		.type	I2C_Peripheral_IsDeviceConnected, %function
+ 299              	I2C_Peripheral_IsDeviceConnected:
+ 300              	.LFB5:
+ 150:I2C_Interface.c ****                                     
+ 151:I2C_Interface.c **** 
+ 152:I2C_Interface.c ****                                             
+ 153:I2C_Interface.c **** // --------------------------------------------------------------------------------- //
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 9
+
+
+ 154:I2C_Interface.c **** 
+ 155:I2C_Interface.c **** uint8_t I2C_Peripheral_IsDeviceConnected(uint8_t device_address) {
+ 301              		.loc 1 155 0
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 0
+ 304              		@ frame_needed = 0, uses_anonymous_args = 0
+ 305              	.LVL38:
+ 306 0000 10B5     		push	{r4, lr}
+ 307              		.cfi_def_cfa_offset 8
+ 308              		.cfi_offset 4, -8
+ 309              		.cfi_offset 14, -4
+ 156:I2C_Interface.c ****     
+ 157:I2C_Interface.c ****     // Send a start condition followed by a stop condition
+ 158:I2C_Interface.c ****     uint8_t error = I2C_Master_MasterSendStart(device_address, I2C_Master_WRITE_XFER_MODE);
+ 310              		.loc 1 158 0
+ 311 0002 0021     		movs	r1, #0
+ 312 0004 FFF7FEFF 		bl	I2C_Master_MasterSendStart
+ 313              	.LVL39:
+ 314 0008 0446     		mov	r4, r0
+ 315              	.LVL40:
+ 159:I2C_Interface.c ****     I2C_Master_MasterSendStop();
+ 316              		.loc 1 159 0
+ 317 000a FFF7FEFF 		bl	I2C_Master_MasterSendStop
+ 318              	.LVL41:
+ 160:I2C_Interface.c ****     // If no error generated during stop, device is connected
+ 161:I2C_Interface.c ****     return (error == I2C_Master_MSTR_NO_ERROR ? DEVICE_CONNECTED : DEVICE_UNCONNECTED);
+ 162:I2C_Interface.c ****     
+ 163:I2C_Interface.c **** }
+ 319              		.loc 1 163 0
+ 320 000e B4FA84F0 		clz	r0, r4
+ 321 0012 4009     		lsrs	r0, r0, #5
+ 322 0014 10BD     		pop	{r4, pc}
+ 323              		.cfi_endproc
+ 324              	.LFE5:
+ 325              		.size	I2C_Peripheral_IsDeviceConnected, .-I2C_Peripheral_IsDeviceConnected
+ 326 0016 00BF     		.text
+ 327              	.Letext0:
+ 328              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 329              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 330              		.file 4 "ErrorCodes.h"
+ 331              		.file 5 "Generated_Source\\PSoC5/I2C_Master.h"
+ 332              		.section	.debug_info,"",%progbits
+ 333              	.Ldebug_info0:
+ 334 0000 F5030000 		.4byte	0x3f5
+ 335 0004 0400     		.2byte	0x4
+ 336 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 337 000a 04       		.byte	0x4
+ 338 000b 01       		.uleb128 0x1
+ 339 000c A2000000 		.4byte	.LASF38
+ 340 0010 0C       		.byte	0xc
+ 341 0011 4E000000 		.4byte	.LASF39
+ 342 0015 0D020000 		.4byte	.LASF40
+ 343 0019 18000000 		.4byte	.Ldebug_ranges0+0x18
+ 344 001d 00000000 		.4byte	0
+ 345 0021 00000000 		.4byte	.Ldebug_line0
+ 346 0025 02       		.uleb128 0x2
+ 347 0026 01       		.byte	0x1
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 10
+
+
+ 348 0027 06       		.byte	0x6
+ 349 0028 33030000 		.4byte	.LASF0
+ 350 002c 03       		.uleb128 0x3
+ 351 002d 00000000 		.4byte	.LASF9
+ 352 0031 02       		.byte	0x2
+ 353 0032 1D       		.byte	0x1d
+ 354 0033 37000000 		.4byte	0x37
+ 355 0037 02       		.uleb128 0x2
+ 356 0038 01       		.byte	0x1
+ 357 0039 08       		.byte	0x8
+ 358 003a 94000000 		.4byte	.LASF1
+ 359 003e 02       		.uleb128 0x2
+ 360 003f 02       		.byte	0x2
+ 361 0040 05       		.byte	0x5
+ 362 0041 E7020000 		.4byte	.LASF2
+ 363 0045 02       		.uleb128 0x2
+ 364 0046 02       		.byte	0x2
+ 365 0047 07       		.byte	0x7
+ 366 0048 42010000 		.4byte	.LASF3
+ 367 004c 02       		.uleb128 0x2
+ 368 004d 04       		.byte	0x4
+ 369 004e 05       		.byte	0x5
+ 370 004f 19030000 		.4byte	.LASF4
+ 371 0053 02       		.uleb128 0x2
+ 372 0054 04       		.byte	0x4
+ 373 0055 07       		.byte	0x7
+ 374 0056 30010000 		.4byte	.LASF5
+ 375 005a 02       		.uleb128 0x2
+ 376 005b 08       		.byte	0x8
+ 377 005c 05       		.byte	0x5
+ 378 005d 8F020000 		.4byte	.LASF6
+ 379 0061 02       		.uleb128 0x2
+ 380 0062 08       		.byte	0x8
+ 381 0063 07       		.byte	0x7
+ 382 0064 EE010000 		.4byte	.LASF7
+ 383 0068 04       		.uleb128 0x4
+ 384 0069 04       		.byte	0x4
+ 385 006a 05       		.byte	0x5
+ 386 006b 696E7400 		.ascii	"int\000"
+ 387 006f 02       		.uleb128 0x2
+ 388 0070 04       		.byte	0x4
+ 389 0071 07       		.byte	0x7
+ 390 0072 E1010000 		.4byte	.LASF8
+ 391 0076 03       		.uleb128 0x3
+ 392 0077 05020000 		.4byte	.LASF10
+ 393 007b 03       		.byte	0x3
+ 394 007c 18       		.byte	0x18
+ 395 007d 2C000000 		.4byte	0x2c
+ 396 0081 02       		.uleb128 0x2
+ 397 0082 04       		.byte	0x4
+ 398 0083 04       		.byte	0x4
+ 399 0084 89000000 		.4byte	.LASF11
+ 400 0088 02       		.uleb128 0x2
+ 401 0089 08       		.byte	0x8
+ 402 008a 04       		.byte	0x4
+ 403 008b 9C010000 		.4byte	.LASF12
+ 404 008f 02       		.uleb128 0x2
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 11
+
+
+ 405 0090 01       		.byte	0x1
+ 406 0091 08       		.byte	0x8
+ 407 0092 22030000 		.4byte	.LASF13
+ 408 0096 05       		.uleb128 0x5
+ 409 0097 01       		.byte	0x1
+ 410 0098 37000000 		.4byte	0x37
+ 411 009c 04       		.byte	0x4
+ 412 009d 15       		.byte	0x15
+ 413 009e AF000000 		.4byte	0xaf
+ 414 00a2 06       		.uleb128 0x6
+ 415 00a3 10030000 		.4byte	.LASF14
+ 416 00a7 00       		.byte	0
+ 417 00a8 06       		.uleb128 0x6
+ 418 00a9 5F020000 		.4byte	.LASF15
+ 419 00ad 01       		.byte	0x1
+ 420 00ae 00       		.byte	0
+ 421 00af 03       		.uleb128 0x3
+ 422 00b0 5E000000 		.4byte	.LASF16
+ 423 00b4 04       		.byte	0x4
+ 424 00b5 18       		.byte	0x18
+ 425 00b6 96000000 		.4byte	0x96
+ 426 00ba 02       		.uleb128 0x2
+ 427 00bb 08       		.byte	0x8
+ 428 00bc 04       		.byte	0x4
+ 429 00bd 27030000 		.4byte	.LASF17
+ 430 00c1 02       		.uleb128 0x2
+ 431 00c2 04       		.byte	0x4
+ 432 00c3 07       		.byte	0x7
+ 433 00c4 80020000 		.4byte	.LASF18
+ 434 00c8 07       		.uleb128 0x7
+ 435 00c9 3F030000 		.4byte	.LASF19
+ 436 00cd 01       		.byte	0x1
+ 437 00ce 20       		.byte	0x20
+ 438 00cf AF000000 		.4byte	0xaf
+ 439 00d3 00000000 		.4byte	.LFB0
+ 440 00d7 0A000000 		.4byte	.LFE0-.LFB0
+ 441 00db 01       		.uleb128 0x1
+ 442 00dc 9C       		.byte	0x9c
+ 443 00dd EB000000 		.4byte	0xeb
+ 444 00e1 08       		.uleb128 0x8
+ 445 00e2 06000000 		.4byte	.LVL0
+ 446 00e6 AB030000 		.4byte	0x3ab
+ 447 00ea 00       		.byte	0
+ 448 00eb 07       		.uleb128 0x7
+ 449 00ec B7020000 		.4byte	.LASF20
+ 450 00f0 01       		.byte	0x1
+ 451 00f1 2B       		.byte	0x2b
+ 452 00f2 AF000000 		.4byte	0xaf
+ 453 00f6 00000000 		.4byte	.LFB1
+ 454 00fa 0A000000 		.4byte	.LFE1-.LFB1
+ 455 00fe 01       		.uleb128 0x1
+ 456 00ff 9C       		.byte	0x9c
+ 457 0100 0E010000 		.4byte	0x10e
+ 458 0104 08       		.uleb128 0x8
+ 459 0105 06000000 		.4byte	.LVL1
+ 460 0109 B6030000 		.4byte	0x3b6
+ 461 010d 00       		.byte	0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 12
+
+
+ 462 010e 07       		.uleb128 0x7
+ 463 010f CB020000 		.4byte	.LASF21
+ 464 0113 01       		.byte	0x1
+ 465 0114 36       		.byte	0x36
+ 466 0115 AF000000 		.4byte	0xaf
+ 467 0119 00000000 		.4byte	.LFB2
+ 468 011d 3A000000 		.4byte	.LFE2-.LFB2
+ 469 0121 01       		.uleb128 0x1
+ 470 0122 9C       		.byte	0x9c
+ 471 0123 C7010000 		.4byte	0x1c7
+ 472 0127 09       		.uleb128 0x9
+ 473 0128 F1020000 		.4byte	.LASF22
+ 474 012c 01       		.byte	0x1
+ 475 012d 36       		.byte	0x36
+ 476 012e 76000000 		.4byte	0x76
+ 477 0132 00000000 		.4byte	.LLST0
+ 478 0136 09       		.uleb128 0x9
+ 479 0137 55010000 		.4byte	.LASF23
+ 480 013b 01       		.byte	0x1
+ 481 013c 37       		.byte	0x37
+ 482 013d 76000000 		.4byte	0x76
+ 483 0141 21000000 		.4byte	.LLST1
+ 484 0145 09       		.uleb128 0x9
+ 485 0146 8F000000 		.4byte	.LASF24
+ 486 014a 01       		.byte	0x1
+ 487 014b 38       		.byte	0x38
+ 488 014c C7010000 		.4byte	0x1c7
+ 489 0150 42000000 		.4byte	.LLST2
+ 490 0154 0A       		.uleb128 0xa
+ 491 0155 89020000 		.4byte	.LASF27
+ 492 0159 01       		.byte	0x1
+ 493 015a 3C       		.byte	0x3c
+ 494 015b 76000000 		.4byte	0x76
+ 495 015f 60000000 		.4byte	.LLST3
+ 496 0163 0B       		.uleb128 0xb
+ 497 0164 0E000000 		.4byte	.LVL4
+ 498 0168 C1030000 		.4byte	0x3c1
+ 499 016c 7C010000 		.4byte	0x17c
+ 500 0170 0C       		.uleb128 0xc
+ 501 0171 01       		.uleb128 0x1
+ 502 0172 50       		.byte	0x50
+ 503 0173 02       		.uleb128 0x2
+ 504 0174 76       		.byte	0x76
+ 505 0175 00       		.sleb128 0
+ 506 0176 0C       		.uleb128 0xc
+ 507 0177 01       		.uleb128 0x1
+ 508 0178 51       		.byte	0x51
+ 509 0179 01       		.uleb128 0x1
+ 510 017a 30       		.byte	0x30
+ 511 017b 00       		.byte	0
+ 512 017c 0B       		.uleb128 0xb
+ 513 017d 18000000 		.4byte	.LVL6
+ 514 0181 CC030000 		.4byte	0x3cc
+ 515 0185 90010000 		.4byte	0x190
+ 516 0189 0C       		.uleb128 0xc
+ 517 018a 01       		.uleb128 0x1
+ 518 018b 50       		.byte	0x50
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 13
+
+
+ 519 018c 02       		.uleb128 0x2
+ 520 018d 75       		.byte	0x75
+ 521 018e 00       		.sleb128 0
+ 522 018f 00       		.byte	0
+ 523 0190 0B       		.uleb128 0xb
+ 524 0191 24000000 		.4byte	.LVL8
+ 525 0195 D7030000 		.4byte	0x3d7
+ 526 0199 A9010000 		.4byte	0x1a9
+ 527 019d 0C       		.uleb128 0xc
+ 528 019e 01       		.uleb128 0x1
+ 529 019f 50       		.byte	0x50
+ 530 01a0 02       		.uleb128 0x2
+ 531 01a1 76       		.byte	0x76
+ 532 01a2 00       		.sleb128 0
+ 533 01a3 0C       		.uleb128 0xc
+ 534 01a4 01       		.uleb128 0x1
+ 535 01a5 51       		.byte	0x51
+ 536 01a6 01       		.uleb128 0x1
+ 537 01a7 31       		.byte	0x31
+ 538 01a8 00       		.byte	0
+ 539 01a9 0B       		.uleb128 0xb
+ 540 01aa 2C000000 		.4byte	.LVL9
+ 541 01ae E2030000 		.4byte	0x3e2
+ 542 01b2 BD010000 		.4byte	0x1bd
+ 543 01b6 0C       		.uleb128 0xc
+ 544 01b7 01       		.uleb128 0x1
+ 545 01b8 50       		.byte	0x50
+ 546 01b9 02       		.uleb128 0x2
+ 547 01ba 74       		.byte	0x74
+ 548 01bb 00       		.sleb128 0
+ 549 01bc 00       		.byte	0
+ 550 01bd 08       		.uleb128 0x8
+ 551 01be 32000000 		.4byte	.LVL11
+ 552 01c2 ED030000 		.4byte	0x3ed
+ 553 01c6 00       		.byte	0
+ 554 01c7 0D       		.uleb128 0xd
+ 555 01c8 04       		.byte	0x4
+ 556 01c9 76000000 		.4byte	0x76
+ 557 01cd 07       		.uleb128 0x7
+ 558 01ce A3010000 		.4byte	.LASF25
+ 559 01d2 01       		.byte	0x1
+ 560 01d3 57       		.byte	0x57
+ 561 01d4 AF000000 		.4byte	0xaf
+ 562 01d8 00000000 		.4byte	.LFB3
+ 563 01dc 62000000 		.4byte	.LFE3-.LFB3
+ 564 01e0 01       		.uleb128 0x1
+ 565 01e1 9C       		.byte	0x9c
+ 566 01e2 BF020000 		.4byte	0x2bf
+ 567 01e6 09       		.uleb128 0x9
+ 568 01e7 F1020000 		.4byte	.LASF22
+ 569 01eb 01       		.byte	0x1
+ 570 01ec 57       		.byte	0x57
+ 571 01ed 76000000 		.4byte	0x76
+ 572 01f1 94000000 		.4byte	.LLST4
+ 573 01f5 09       		.uleb128 0x9
+ 574 01f6 55010000 		.4byte	.LASF23
+ 575 01fa 01       		.byte	0x1
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 14
+
+
+ 576 01fb 58       		.byte	0x58
+ 577 01fc 76000000 		.4byte	0x76
+ 578 0200 B5000000 		.4byte	.LLST5
+ 579 0204 09       		.uleb128 0x9
+ 580 0205 3F000000 		.4byte	.LASF26
+ 581 0209 01       		.byte	0x1
+ 582 020a 59       		.byte	0x59
+ 583 020b 76000000 		.4byte	0x76
+ 584 020f F6000000 		.4byte	.LLST6
+ 585 0213 09       		.uleb128 0x9
+ 586 0214 8F000000 		.4byte	.LASF24
+ 587 0218 01       		.byte	0x1
+ 588 0219 5A       		.byte	0x5a
+ 589 021a C7010000 		.4byte	0x1c7
+ 590 021e 17010000 		.4byte	.LLST7
+ 591 0222 0A       		.uleb128 0xa
+ 592 0223 89020000 		.4byte	.LASF27
+ 593 0227 01       		.byte	0x1
+ 594 0228 5D       		.byte	0x5d
+ 595 0229 76000000 		.4byte	0x76
+ 596 022d 35010000 		.4byte	.LLST8
+ 597 0231 0E       		.uleb128 0xe
+ 598 0232 00000000 		.4byte	.Ldebug_ranges0+0
+ 599 0236 6C020000 		.4byte	0x26c
+ 600 023a 0A       		.uleb128 0xa
+ 601 023b 83010000 		.4byte	.LASF28
+ 602 023f 01       		.byte	0x1
+ 603 0240 6A       		.byte	0x6a
+ 604 0241 76000000 		.4byte	0x76
+ 605 0245 74010000 		.4byte	.LLST9
+ 606 0249 0B       		.uleb128 0xb
+ 607 024a 3A000000 		.4byte	.LVL21
+ 608 024e E2030000 		.4byte	0x3e2
+ 609 0252 5C020000 		.4byte	0x25c
+ 610 0256 0C       		.uleb128 0xc
+ 611 0257 01       		.uleb128 0x1
+ 612 0258 50       		.byte	0x50
+ 613 0259 01       		.uleb128 0x1
+ 614 025a 31       		.byte	0x31
+ 615 025b 00       		.byte	0
+ 616 025c 0F       		.uleb128 0xf
+ 617 025d 52000000 		.4byte	.LVL26
+ 618 0261 E2030000 		.4byte	0x3e2
+ 619 0265 0C       		.uleb128 0xc
+ 620 0266 01       		.uleb128 0x1
+ 621 0267 50       		.byte	0x50
+ 622 0268 01       		.uleb128 0x1
+ 623 0269 30       		.byte	0x30
+ 624 026a 00       		.byte	0
+ 625 026b 00       		.byte	0
+ 626 026c 0B       		.uleb128 0xb
+ 627 026d 12000000 		.4byte	.LVL14
+ 628 0271 C1030000 		.4byte	0x3c1
+ 629 0275 85020000 		.4byte	0x285
+ 630 0279 0C       		.uleb128 0xc
+ 631 027a 01       		.uleb128 0x1
+ 632 027b 50       		.byte	0x50
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 15
+
+
+ 633 027c 02       		.uleb128 0x2
+ 634 027d 78       		.byte	0x78
+ 635 027e 00       		.sleb128 0
+ 636 027f 0C       		.uleb128 0xc
+ 637 0280 01       		.uleb128 0x1
+ 638 0281 51       		.byte	0x51
+ 639 0282 01       		.uleb128 0x1
+ 640 0283 30       		.byte	0x30
+ 641 0284 00       		.byte	0
+ 642 0285 0B       		.uleb128 0xb
+ 643 0286 1E000000 		.4byte	.LVL17
+ 644 028a CC030000 		.4byte	0x3cc
+ 645 028e 9C020000 		.4byte	0x29c
+ 646 0292 0C       		.uleb128 0xc
+ 647 0293 01       		.uleb128 0x1
+ 648 0294 50       		.byte	0x50
+ 649 0295 05       		.uleb128 0x5
+ 650 0296 74       		.byte	0x74
+ 651 0297 00       		.sleb128 0
+ 652 0298 08       		.byte	0x8
+ 653 0299 80       		.byte	0x80
+ 654 029a 21       		.byte	0x21
+ 655 029b 00       		.byte	0
+ 656 029c 0B       		.uleb128 0xb
+ 657 029d 2A000000 		.4byte	.LVL19
+ 658 02a1 D7030000 		.4byte	0x3d7
+ 659 02a5 B5020000 		.4byte	0x2b5
+ 660 02a9 0C       		.uleb128 0xc
+ 661 02aa 01       		.uleb128 0x1
+ 662 02ab 50       		.byte	0x50
+ 663 02ac 02       		.uleb128 0x2
+ 664 02ad 78       		.byte	0x78
+ 665 02ae 00       		.sleb128 0
+ 666 02af 0C       		.uleb128 0xc
+ 667 02b0 01       		.uleb128 0x1
+ 668 02b1 51       		.byte	0x51
+ 669 02b2 01       		.uleb128 0x1
+ 670 02b3 31       		.byte	0x31
+ 671 02b4 00       		.byte	0
+ 672 02b5 08       		.uleb128 0x8
+ 673 02b6 58000000 		.4byte	.LVL28
+ 674 02ba ED030000 		.4byte	0x3ed
+ 675 02be 00       		.byte	0
+ 676 02bf 07       		.uleb128 0x7
+ 677 02c0 C4010000 		.4byte	.LASF29
+ 678 02c4 01       		.byte	0x1
+ 679 02c5 80       		.byte	0x80
+ 680 02c6 AF000000 		.4byte	0xaf
+ 681 02ca 00000000 		.4byte	.LFB4
+ 682 02ce 2E000000 		.4byte	.LFE4-.LFB4
+ 683 02d2 01       		.uleb128 0x1
+ 684 02d3 9C       		.byte	0x9c
+ 685 02d4 59030000 		.4byte	0x359
+ 686 02d8 09       		.uleb128 0x9
+ 687 02d9 F1020000 		.4byte	.LASF22
+ 688 02dd 01       		.byte	0x1
+ 689 02de 80       		.byte	0x80
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 16
+
+
+ 690 02df 76000000 		.4byte	0x76
+ 691 02e3 9D010000 		.4byte	.LLST10
+ 692 02e7 09       		.uleb128 0x9
+ 693 02e8 55010000 		.4byte	.LASF23
+ 694 02ec 01       		.byte	0x1
+ 695 02ed 81       		.byte	0x81
+ 696 02ee 76000000 		.4byte	0x76
+ 697 02f2 BE010000 		.4byte	.LLST11
+ 698 02f6 09       		.uleb128 0x9
+ 699 02f7 8F000000 		.4byte	.LASF24
+ 700 02fb 01       		.byte	0x1
+ 701 02fc 82       		.byte	0x82
+ 702 02fd 76000000 		.4byte	0x76
+ 703 0301 DF010000 		.4byte	.LLST12
+ 704 0305 0A       		.uleb128 0xa
+ 705 0306 89020000 		.4byte	.LASF27
+ 706 030a 01       		.byte	0x1
+ 707 030b 86       		.byte	0x86
+ 708 030c 76000000 		.4byte	0x76
+ 709 0310 00020000 		.4byte	.LLST13
+ 710 0314 0B       		.uleb128 0xb
+ 711 0315 0C000000 		.4byte	.LVL31
+ 712 0319 C1030000 		.4byte	0x3c1
+ 713 031d 27030000 		.4byte	0x327
+ 714 0321 0C       		.uleb128 0xc
+ 715 0322 01       		.uleb128 0x1
+ 716 0323 51       		.byte	0x51
+ 717 0324 01       		.uleb128 0x1
+ 718 0325 30       		.byte	0x30
+ 719 0326 00       		.byte	0
+ 720 0327 0B       		.uleb128 0xb
+ 721 0328 16000000 		.4byte	.LVL33
+ 722 032c CC030000 		.4byte	0x3cc
+ 723 0330 3B030000 		.4byte	0x33b
+ 724 0334 0C       		.uleb128 0xc
+ 725 0335 01       		.uleb128 0x1
+ 726 0336 50       		.byte	0x50
+ 727 0337 02       		.uleb128 0x2
+ 728 0338 75       		.byte	0x75
+ 729 0339 00       		.sleb128 0
+ 730 033a 00       		.byte	0
+ 731 033b 0B       		.uleb128 0xb
+ 732 033c 20000000 		.4byte	.LVL35
+ 733 0340 CC030000 		.4byte	0x3cc
+ 734 0344 4F030000 		.4byte	0x34f
+ 735 0348 0C       		.uleb128 0xc
+ 736 0349 01       		.uleb128 0x1
+ 737 034a 50       		.byte	0x50
+ 738 034b 02       		.uleb128 0x2
+ 739 034c 76       		.byte	0x76
+ 740 034d 00       		.sleb128 0
+ 741 034e 00       		.byte	0
+ 742 034f 08       		.uleb128 0x8
+ 743 0350 26000000 		.4byte	.LVL37
+ 744 0354 ED030000 		.4byte	0x3ed
+ 745 0358 00       		.byte	0
+ 746 0359 07       		.uleb128 0x7
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 17
+
+
+ 747 035a 68000000 		.4byte	.LASF30
+ 748 035e 01       		.byte	0x1
+ 749 035f 9B       		.byte	0x9b
+ 750 0360 76000000 		.4byte	0x76
+ 751 0364 00000000 		.4byte	.LFB5
+ 752 0368 16000000 		.4byte	.LFE5-.LFB5
+ 753 036c 01       		.uleb128 0x1
+ 754 036d 9C       		.byte	0x9c
+ 755 036e AB030000 		.4byte	0x3ab
+ 756 0372 09       		.uleb128 0x9
+ 757 0373 F1020000 		.4byte	.LASF22
+ 758 0377 01       		.byte	0x1
+ 759 0378 9B       		.byte	0x9b
+ 760 0379 76000000 		.4byte	0x76
+ 761 037d 29020000 		.4byte	.LLST14
+ 762 0381 10       		.uleb128 0x10
+ 763 0382 89020000 		.4byte	.LASF27
+ 764 0386 01       		.byte	0x1
+ 765 0387 9E       		.byte	0x9e
+ 766 0388 76000000 		.4byte	0x76
+ 767 038c 01       		.uleb128 0x1
+ 768 038d 54       		.byte	0x54
+ 769 038e 0B       		.uleb128 0xb
+ 770 038f 08000000 		.4byte	.LVL39
+ 771 0393 C1030000 		.4byte	0x3c1
+ 772 0397 A1030000 		.4byte	0x3a1
+ 773 039b 0C       		.uleb128 0xc
+ 774 039c 01       		.uleb128 0x1
+ 775 039d 51       		.byte	0x51
+ 776 039e 01       		.uleb128 0x1
+ 777 039f 30       		.byte	0x30
+ 778 03a0 00       		.byte	0
+ 779 03a1 08       		.uleb128 0x8
+ 780 03a2 0E000000 		.4byte	.LVL41
+ 781 03a6 ED030000 		.4byte	0x3ed
+ 782 03aa 00       		.byte	0
+ 783 03ab 11       		.uleb128 0x11
+ 784 03ac 8B010000 		.4byte	.LASF31
+ 785 03b0 8B010000 		.4byte	.LASF31
+ 786 03b4 05       		.byte	0x5
+ 787 03b5 93       		.byte	0x93
+ 788 03b6 11       		.uleb128 0x11
+ 789 03b7 00030000 		.4byte	.LASF32
+ 790 03bb 00030000 		.4byte	.LASF32
+ 791 03bf 05       		.byte	0x5
+ 792 03c0 94       		.byte	0x94
+ 793 03c1 11       		.uleb128 0x11
+ 794 03c2 65020000 		.4byte	.LASF33
+ 795 03c6 65020000 		.4byte	.LASF33
+ 796 03ca 05       		.byte	0x5
+ 797 03cb B1       		.byte	0xb1
+ 798 03cc 11       		.uleb128 0x11
+ 799 03cd 24000000 		.4byte	.LASF34
+ 800 03d1 24000000 		.4byte	.LASF34
+ 801 03d5 05       		.byte	0x5
+ 802 03d6 B6       		.byte	0xb6
+ 803 03d7 11       		.uleb128 0x11
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 18
+
+
+ 804 03d8 66010000 		.4byte	.LASF35
+ 805 03dc 66010000 		.4byte	.LASF35
+ 806 03e0 05       		.byte	0x5
+ 807 03e1 B3       		.byte	0xb3
+ 808 03e2 11       		.uleb128 0x11
+ 809 03e3 0A000000 		.4byte	.LASF36
+ 810 03e7 0A000000 		.4byte	.LASF36
+ 811 03eb 05       		.byte	0x5
+ 812 03ec B7       		.byte	0xb7
+ 813 03ed 11       		.uleb128 0x11
+ 814 03ee 9D020000 		.4byte	.LASF37
+ 815 03f2 9D020000 		.4byte	.LASF37
+ 816 03f6 05       		.byte	0x5
+ 817 03f7 B5       		.byte	0xb5
+ 818 03f8 00       		.byte	0
+ 819              		.section	.debug_abbrev,"",%progbits
+ 820              	.Ldebug_abbrev0:
+ 821 0000 01       		.uleb128 0x1
+ 822 0001 11       		.uleb128 0x11
+ 823 0002 01       		.byte	0x1
+ 824 0003 25       		.uleb128 0x25
+ 825 0004 0E       		.uleb128 0xe
+ 826 0005 13       		.uleb128 0x13
+ 827 0006 0B       		.uleb128 0xb
+ 828 0007 03       		.uleb128 0x3
+ 829 0008 0E       		.uleb128 0xe
+ 830 0009 1B       		.uleb128 0x1b
+ 831 000a 0E       		.uleb128 0xe
+ 832 000b 55       		.uleb128 0x55
+ 833 000c 17       		.uleb128 0x17
+ 834 000d 11       		.uleb128 0x11
+ 835 000e 01       		.uleb128 0x1
+ 836 000f 10       		.uleb128 0x10
+ 837 0010 17       		.uleb128 0x17
+ 838 0011 00       		.byte	0
+ 839 0012 00       		.byte	0
+ 840 0013 02       		.uleb128 0x2
+ 841 0014 24       		.uleb128 0x24
+ 842 0015 00       		.byte	0
+ 843 0016 0B       		.uleb128 0xb
+ 844 0017 0B       		.uleb128 0xb
+ 845 0018 3E       		.uleb128 0x3e
+ 846 0019 0B       		.uleb128 0xb
+ 847 001a 03       		.uleb128 0x3
+ 848 001b 0E       		.uleb128 0xe
+ 849 001c 00       		.byte	0
+ 850 001d 00       		.byte	0
+ 851 001e 03       		.uleb128 0x3
+ 852 001f 16       		.uleb128 0x16
+ 853 0020 00       		.byte	0
+ 854 0021 03       		.uleb128 0x3
+ 855 0022 0E       		.uleb128 0xe
+ 856 0023 3A       		.uleb128 0x3a
+ 857 0024 0B       		.uleb128 0xb
+ 858 0025 3B       		.uleb128 0x3b
+ 859 0026 0B       		.uleb128 0xb
+ 860 0027 49       		.uleb128 0x49
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 19
+
+
+ 861 0028 13       		.uleb128 0x13
+ 862 0029 00       		.byte	0
+ 863 002a 00       		.byte	0
+ 864 002b 04       		.uleb128 0x4
+ 865 002c 24       		.uleb128 0x24
+ 866 002d 00       		.byte	0
+ 867 002e 0B       		.uleb128 0xb
+ 868 002f 0B       		.uleb128 0xb
+ 869 0030 3E       		.uleb128 0x3e
+ 870 0031 0B       		.uleb128 0xb
+ 871 0032 03       		.uleb128 0x3
+ 872 0033 08       		.uleb128 0x8
+ 873 0034 00       		.byte	0
+ 874 0035 00       		.byte	0
+ 875 0036 05       		.uleb128 0x5
+ 876 0037 04       		.uleb128 0x4
+ 877 0038 01       		.byte	0x1
+ 878 0039 0B       		.uleb128 0xb
+ 879 003a 0B       		.uleb128 0xb
+ 880 003b 49       		.uleb128 0x49
+ 881 003c 13       		.uleb128 0x13
+ 882 003d 3A       		.uleb128 0x3a
+ 883 003e 0B       		.uleb128 0xb
+ 884 003f 3B       		.uleb128 0x3b
+ 885 0040 0B       		.uleb128 0xb
+ 886 0041 01       		.uleb128 0x1
+ 887 0042 13       		.uleb128 0x13
+ 888 0043 00       		.byte	0
+ 889 0044 00       		.byte	0
+ 890 0045 06       		.uleb128 0x6
+ 891 0046 28       		.uleb128 0x28
+ 892 0047 00       		.byte	0
+ 893 0048 03       		.uleb128 0x3
+ 894 0049 0E       		.uleb128 0xe
+ 895 004a 1C       		.uleb128 0x1c
+ 896 004b 0B       		.uleb128 0xb
+ 897 004c 00       		.byte	0
+ 898 004d 00       		.byte	0
+ 899 004e 07       		.uleb128 0x7
+ 900 004f 2E       		.uleb128 0x2e
+ 901 0050 01       		.byte	0x1
+ 902 0051 3F       		.uleb128 0x3f
+ 903 0052 19       		.uleb128 0x19
+ 904 0053 03       		.uleb128 0x3
+ 905 0054 0E       		.uleb128 0xe
+ 906 0055 3A       		.uleb128 0x3a
+ 907 0056 0B       		.uleb128 0xb
+ 908 0057 3B       		.uleb128 0x3b
+ 909 0058 0B       		.uleb128 0xb
+ 910 0059 27       		.uleb128 0x27
+ 911 005a 19       		.uleb128 0x19
+ 912 005b 49       		.uleb128 0x49
+ 913 005c 13       		.uleb128 0x13
+ 914 005d 11       		.uleb128 0x11
+ 915 005e 01       		.uleb128 0x1
+ 916 005f 12       		.uleb128 0x12
+ 917 0060 06       		.uleb128 0x6
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 20
+
+
+ 918 0061 40       		.uleb128 0x40
+ 919 0062 18       		.uleb128 0x18
+ 920 0063 9742     		.uleb128 0x2117
+ 921 0065 19       		.uleb128 0x19
+ 922 0066 01       		.uleb128 0x1
+ 923 0067 13       		.uleb128 0x13
+ 924 0068 00       		.byte	0
+ 925 0069 00       		.byte	0
+ 926 006a 08       		.uleb128 0x8
+ 927 006b 898201   		.uleb128 0x4109
+ 928 006e 00       		.byte	0
+ 929 006f 11       		.uleb128 0x11
+ 930 0070 01       		.uleb128 0x1
+ 931 0071 31       		.uleb128 0x31
+ 932 0072 13       		.uleb128 0x13
+ 933 0073 00       		.byte	0
+ 934 0074 00       		.byte	0
+ 935 0075 09       		.uleb128 0x9
+ 936 0076 05       		.uleb128 0x5
+ 937 0077 00       		.byte	0
+ 938 0078 03       		.uleb128 0x3
+ 939 0079 0E       		.uleb128 0xe
+ 940 007a 3A       		.uleb128 0x3a
+ 941 007b 0B       		.uleb128 0xb
+ 942 007c 3B       		.uleb128 0x3b
+ 943 007d 0B       		.uleb128 0xb
+ 944 007e 49       		.uleb128 0x49
+ 945 007f 13       		.uleb128 0x13
+ 946 0080 02       		.uleb128 0x2
+ 947 0081 17       		.uleb128 0x17
+ 948 0082 00       		.byte	0
+ 949 0083 00       		.byte	0
+ 950 0084 0A       		.uleb128 0xa
+ 951 0085 34       		.uleb128 0x34
+ 952 0086 00       		.byte	0
+ 953 0087 03       		.uleb128 0x3
+ 954 0088 0E       		.uleb128 0xe
+ 955 0089 3A       		.uleb128 0x3a
+ 956 008a 0B       		.uleb128 0xb
+ 957 008b 3B       		.uleb128 0x3b
+ 958 008c 0B       		.uleb128 0xb
+ 959 008d 49       		.uleb128 0x49
+ 960 008e 13       		.uleb128 0x13
+ 961 008f 02       		.uleb128 0x2
+ 962 0090 17       		.uleb128 0x17
+ 963 0091 00       		.byte	0
+ 964 0092 00       		.byte	0
+ 965 0093 0B       		.uleb128 0xb
+ 966 0094 898201   		.uleb128 0x4109
+ 967 0097 01       		.byte	0x1
+ 968 0098 11       		.uleb128 0x11
+ 969 0099 01       		.uleb128 0x1
+ 970 009a 31       		.uleb128 0x31
+ 971 009b 13       		.uleb128 0x13
+ 972 009c 01       		.uleb128 0x1
+ 973 009d 13       		.uleb128 0x13
+ 974 009e 00       		.byte	0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 21
+
+
+ 975 009f 00       		.byte	0
+ 976 00a0 0C       		.uleb128 0xc
+ 977 00a1 8A8201   		.uleb128 0x410a
+ 978 00a4 00       		.byte	0
+ 979 00a5 02       		.uleb128 0x2
+ 980 00a6 18       		.uleb128 0x18
+ 981 00a7 9142     		.uleb128 0x2111
+ 982 00a9 18       		.uleb128 0x18
+ 983 00aa 00       		.byte	0
+ 984 00ab 00       		.byte	0
+ 985 00ac 0D       		.uleb128 0xd
+ 986 00ad 0F       		.uleb128 0xf
+ 987 00ae 00       		.byte	0
+ 988 00af 0B       		.uleb128 0xb
+ 989 00b0 0B       		.uleb128 0xb
+ 990 00b1 49       		.uleb128 0x49
+ 991 00b2 13       		.uleb128 0x13
+ 992 00b3 00       		.byte	0
+ 993 00b4 00       		.byte	0
+ 994 00b5 0E       		.uleb128 0xe
+ 995 00b6 0B       		.uleb128 0xb
+ 996 00b7 01       		.byte	0x1
+ 997 00b8 55       		.uleb128 0x55
+ 998 00b9 17       		.uleb128 0x17
+ 999 00ba 01       		.uleb128 0x1
+ 1000 00bb 13       		.uleb128 0x13
+ 1001 00bc 00       		.byte	0
+ 1002 00bd 00       		.byte	0
+ 1003 00be 0F       		.uleb128 0xf
+ 1004 00bf 898201   		.uleb128 0x4109
+ 1005 00c2 01       		.byte	0x1
+ 1006 00c3 11       		.uleb128 0x11
+ 1007 00c4 01       		.uleb128 0x1
+ 1008 00c5 31       		.uleb128 0x31
+ 1009 00c6 13       		.uleb128 0x13
+ 1010 00c7 00       		.byte	0
+ 1011 00c8 00       		.byte	0
+ 1012 00c9 10       		.uleb128 0x10
+ 1013 00ca 34       		.uleb128 0x34
+ 1014 00cb 00       		.byte	0
+ 1015 00cc 03       		.uleb128 0x3
+ 1016 00cd 0E       		.uleb128 0xe
+ 1017 00ce 3A       		.uleb128 0x3a
+ 1018 00cf 0B       		.uleb128 0xb
+ 1019 00d0 3B       		.uleb128 0x3b
+ 1020 00d1 0B       		.uleb128 0xb
+ 1021 00d2 49       		.uleb128 0x49
+ 1022 00d3 13       		.uleb128 0x13
+ 1023 00d4 02       		.uleb128 0x2
+ 1024 00d5 18       		.uleb128 0x18
+ 1025 00d6 00       		.byte	0
+ 1026 00d7 00       		.byte	0
+ 1027 00d8 11       		.uleb128 0x11
+ 1028 00d9 2E       		.uleb128 0x2e
+ 1029 00da 00       		.byte	0
+ 1030 00db 3F       		.uleb128 0x3f
+ 1031 00dc 19       		.uleb128 0x19
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 22
+
+
+ 1032 00dd 3C       		.uleb128 0x3c
+ 1033 00de 19       		.uleb128 0x19
+ 1034 00df 6E       		.uleb128 0x6e
+ 1035 00e0 0E       		.uleb128 0xe
+ 1036 00e1 03       		.uleb128 0x3
+ 1037 00e2 0E       		.uleb128 0xe
+ 1038 00e3 3A       		.uleb128 0x3a
+ 1039 00e4 0B       		.uleb128 0xb
+ 1040 00e5 3B       		.uleb128 0x3b
+ 1041 00e6 0B       		.uleb128 0xb
+ 1042 00e7 00       		.byte	0
+ 1043 00e8 00       		.byte	0
+ 1044 00e9 00       		.byte	0
+ 1045              		.section	.debug_loc,"",%progbits
+ 1046              	.Ldebug_loc0:
+ 1047              	.LLST0:
+ 1048 0000 00000000 		.4byte	.LVL2
+ 1049 0004 0D000000 		.4byte	.LVL4-1
+ 1050 0008 0100     		.2byte	0x1
+ 1051 000a 50       		.byte	0x50
+ 1052 000b 0D000000 		.4byte	.LVL4-1
+ 1053 000f 3A000000 		.4byte	.LFE2
+ 1054 0013 0400     		.2byte	0x4
+ 1055 0015 F3       		.byte	0xf3
+ 1056 0016 01       		.uleb128 0x1
+ 1057 0017 50       		.byte	0x50
+ 1058 0018 9F       		.byte	0x9f
+ 1059 0019 00000000 		.4byte	0
+ 1060 001d 00000000 		.4byte	0
+ 1061              	.LLST1:
+ 1062 0021 00000000 		.4byte	.LVL2
+ 1063 0025 0A000000 		.4byte	.LVL3
+ 1064 0029 0100     		.2byte	0x1
+ 1065 002b 51       		.byte	0x51
+ 1066 002c 0A000000 		.4byte	.LVL3
+ 1067 0030 3A000000 		.4byte	.LFE2
+ 1068 0034 0400     		.2byte	0x4
+ 1069 0036 F3       		.byte	0xf3
+ 1070 0037 01       		.uleb128 0x1
+ 1071 0038 51       		.byte	0x51
+ 1072 0039 9F       		.byte	0x9f
+ 1073 003a 00000000 		.4byte	0
+ 1074 003e 00000000 		.4byte	0
+ 1075              	.LLST2:
+ 1076 0042 00000000 		.4byte	.LVL2
+ 1077 0046 0D000000 		.4byte	.LVL4-1
+ 1078 004a 0100     		.2byte	0x1
+ 1079 004c 52       		.byte	0x52
+ 1080 004d 0D000000 		.4byte	.LVL4-1
+ 1081 0051 3A000000 		.4byte	.LFE2
+ 1082 0055 0100     		.2byte	0x1
+ 1083 0057 57       		.byte	0x57
+ 1084 0058 00000000 		.4byte	0
+ 1085 005c 00000000 		.4byte	0
+ 1086              	.LLST3:
+ 1087 0060 0E000000 		.4byte	.LVL4
+ 1088 0064 14000000 		.4byte	.LVL5
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 23
+
+
+ 1089 0068 0100     		.2byte	0x1
+ 1090 006a 50       		.byte	0x50
+ 1091 006b 18000000 		.4byte	.LVL6
+ 1092 006f 20000000 		.4byte	.LVL7
+ 1093 0073 0100     		.2byte	0x1
+ 1094 0075 50       		.byte	0x50
+ 1095 0076 24000000 		.4byte	.LVL8
+ 1096 007a 2B000000 		.4byte	.LVL9-1
+ 1097 007e 0100     		.2byte	0x1
+ 1098 0080 50       		.byte	0x50
+ 1099 0081 2E000000 		.4byte	.LVL10
+ 1100 0085 3A000000 		.4byte	.LFE2
+ 1101 0089 0100     		.2byte	0x1
+ 1102 008b 54       		.byte	0x54
+ 1103 008c 00000000 		.4byte	0
+ 1104 0090 00000000 		.4byte	0
+ 1105              	.LLST4:
+ 1106 0094 00000000 		.4byte	.LVL12
+ 1107 0098 11000000 		.4byte	.LVL14-1
+ 1108 009c 0100     		.2byte	0x1
+ 1109 009e 50       		.byte	0x50
+ 1110 009f 11000000 		.4byte	.LVL14-1
+ 1111 00a3 62000000 		.4byte	.LFE3
+ 1112 00a7 0400     		.2byte	0x4
+ 1113 00a9 F3       		.byte	0xf3
+ 1114 00aa 01       		.uleb128 0x1
+ 1115 00ab 50       		.byte	0x50
+ 1116 00ac 9F       		.byte	0x9f
+ 1117 00ad 00000000 		.4byte	0
+ 1118 00b1 00000000 		.4byte	0
+ 1119              	.LLST5:
+ 1120 00b5 00000000 		.4byte	.LVL12
+ 1121 00b9 0E000000 		.4byte	.LVL13
+ 1122 00bd 0100     		.2byte	0x1
+ 1123 00bf 51       		.byte	0x51
+ 1124 00c0 0E000000 		.4byte	.LVL13
+ 1125 00c4 16000000 		.4byte	.LVL15
+ 1126 00c8 0400     		.2byte	0x4
+ 1127 00ca F3       		.byte	0xf3
+ 1128 00cb 01       		.uleb128 0x1
+ 1129 00cc 51       		.byte	0x51
+ 1130 00cd 9F       		.byte	0x9f
+ 1131 00ce 16000000 		.4byte	.LVL15
+ 1132 00d2 30000000 		.4byte	.LVL20
+ 1133 00d6 0600     		.2byte	0x6
+ 1134 00d8 74       		.byte	0x74
+ 1135 00d9 00       		.sleb128 0
+ 1136 00da 08       		.byte	0x8
+ 1137 00db 80       		.byte	0x80
+ 1138 00dc 21       		.byte	0x21
+ 1139 00dd 9F       		.byte	0x9f
+ 1140 00de 44000000 		.4byte	.LVL24
+ 1141 00e2 46000000 		.4byte	.LVL25
+ 1142 00e6 0600     		.2byte	0x6
+ 1143 00e8 74       		.byte	0x74
+ 1144 00e9 00       		.sleb128 0
+ 1145 00ea 08       		.byte	0x8
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 24
+
+
+ 1146 00eb 80       		.byte	0x80
+ 1147 00ec 21       		.byte	0x21
+ 1148 00ed 9F       		.byte	0x9f
+ 1149 00ee 00000000 		.4byte	0
+ 1150 00f2 00000000 		.4byte	0
+ 1151              	.LLST6:
+ 1152 00f6 00000000 		.4byte	.LVL12
+ 1153 00fa 11000000 		.4byte	.LVL14-1
+ 1154 00fe 0100     		.2byte	0x1
+ 1155 0100 52       		.byte	0x52
+ 1156 0101 11000000 		.4byte	.LVL14-1
+ 1157 0105 62000000 		.4byte	.LFE3
+ 1158 0109 0400     		.2byte	0x4
+ 1159 010b F3       		.byte	0xf3
+ 1160 010c 01       		.uleb128 0x1
+ 1161 010d 52       		.byte	0x52
+ 1162 010e 9F       		.byte	0x9f
+ 1163 010f 00000000 		.4byte	0
+ 1164 0113 00000000 		.4byte	0
+ 1165              	.LLST7:
+ 1166 0117 00000000 		.4byte	.LVL12
+ 1167 011b 11000000 		.4byte	.LVL14-1
+ 1168 011f 0100     		.2byte	0x1
+ 1169 0121 53       		.byte	0x53
+ 1170 0122 11000000 		.4byte	.LVL14-1
+ 1171 0126 62000000 		.4byte	.LFE3
+ 1172 012a 0100     		.2byte	0x1
+ 1173 012c 57       		.byte	0x57
+ 1174 012d 00000000 		.4byte	0
+ 1175 0131 00000000 		.4byte	0
+ 1176              	.LLST8:
+ 1177 0135 12000000 		.4byte	.LVL14
+ 1178 0139 1A000000 		.4byte	.LVL16
+ 1179 013d 0100     		.2byte	0x1
+ 1180 013f 50       		.byte	0x50
+ 1181 0140 1E000000 		.4byte	.LVL17
+ 1182 0144 26000000 		.4byte	.LVL18
+ 1183 0148 0100     		.2byte	0x1
+ 1184 014a 50       		.byte	0x50
+ 1185 014b 2A000000 		.4byte	.LVL19
+ 1186 014f 30000000 		.4byte	.LVL20
+ 1187 0153 0100     		.2byte	0x1
+ 1188 0155 50       		.byte	0x50
+ 1189 0156 44000000 		.4byte	.LVL24
+ 1190 015a 46000000 		.4byte	.LVL25
+ 1191 015e 0100     		.2byte	0x1
+ 1192 0160 50       		.byte	0x50
+ 1193 0161 54000000 		.4byte	.LVL27
+ 1194 0165 62000000 		.4byte	.LFE3
+ 1195 0169 0100     		.2byte	0x1
+ 1196 016b 55       		.byte	0x55
+ 1197 016c 00000000 		.4byte	0
+ 1198 0170 00000000 		.4byte	0
+ 1199              	.LLST9:
+ 1200 0174 30000000 		.4byte	.LVL20
+ 1201 0178 40000000 		.4byte	.LVL22
+ 1202 017c 0100     		.2byte	0x1
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 25
+
+
+ 1203 017e 54       		.byte	0x54
+ 1204 017f 42000000 		.4byte	.LVL23
+ 1205 0183 44000000 		.4byte	.LVL24
+ 1206 0187 0100     		.2byte	0x1
+ 1207 0189 54       		.byte	0x54
+ 1208 018a 46000000 		.4byte	.LVL25
+ 1209 018e 54000000 		.4byte	.LVL27
+ 1210 0192 0100     		.2byte	0x1
+ 1211 0194 54       		.byte	0x54
+ 1212 0195 00000000 		.4byte	0
+ 1213 0199 00000000 		.4byte	0
+ 1214              	.LLST10:
+ 1215 019d 00000000 		.4byte	.LVL29
+ 1216 01a1 0B000000 		.4byte	.LVL31-1
+ 1217 01a5 0100     		.2byte	0x1
+ 1218 01a7 50       		.byte	0x50
+ 1219 01a8 0B000000 		.4byte	.LVL31-1
+ 1220 01ac 2E000000 		.4byte	.LFE4
+ 1221 01b0 0400     		.2byte	0x4
+ 1222 01b2 F3       		.byte	0xf3
+ 1223 01b3 01       		.uleb128 0x1
+ 1224 01b4 50       		.byte	0x50
+ 1225 01b5 9F       		.byte	0x9f
+ 1226 01b6 00000000 		.4byte	0
+ 1227 01ba 00000000 		.4byte	0
+ 1228              	.LLST11:
+ 1229 01be 00000000 		.4byte	.LVL29
+ 1230 01c2 08000000 		.4byte	.LVL30
+ 1231 01c6 0100     		.2byte	0x1
+ 1232 01c8 51       		.byte	0x51
+ 1233 01c9 08000000 		.4byte	.LVL30
+ 1234 01cd 2E000000 		.4byte	.LFE4
+ 1235 01d1 0400     		.2byte	0x4
+ 1236 01d3 F3       		.byte	0xf3
+ 1237 01d4 01       		.uleb128 0x1
+ 1238 01d5 51       		.byte	0x51
+ 1239 01d6 9F       		.byte	0x9f
+ 1240 01d7 00000000 		.4byte	0
+ 1241 01db 00000000 		.4byte	0
+ 1242              	.LLST12:
+ 1243 01df 00000000 		.4byte	.LVL29
+ 1244 01e3 0B000000 		.4byte	.LVL31-1
+ 1245 01e7 0100     		.2byte	0x1
+ 1246 01e9 52       		.byte	0x52
+ 1247 01ea 0B000000 		.4byte	.LVL31-1
+ 1248 01ee 2E000000 		.4byte	.LFE4
+ 1249 01f2 0400     		.2byte	0x4
+ 1250 01f4 F3       		.byte	0xf3
+ 1251 01f5 01       		.uleb128 0x1
+ 1252 01f6 52       		.byte	0x52
+ 1253 01f7 9F       		.byte	0x9f
+ 1254 01f8 00000000 		.4byte	0
+ 1255 01fc 00000000 		.4byte	0
+ 1256              	.LLST13:
+ 1257 0200 0C000000 		.4byte	.LVL31
+ 1258 0204 12000000 		.4byte	.LVL32
+ 1259 0208 0100     		.2byte	0x1
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 26
+
+
+ 1260 020a 50       		.byte	0x50
+ 1261 020b 16000000 		.4byte	.LVL33
+ 1262 020f 1C000000 		.4byte	.LVL34
+ 1263 0213 0100     		.2byte	0x1
+ 1264 0215 50       		.byte	0x50
+ 1265 0216 22000000 		.4byte	.LVL36
+ 1266 021a 2E000000 		.4byte	.LFE4
+ 1267 021e 0100     		.2byte	0x1
+ 1268 0220 54       		.byte	0x54
+ 1269 0221 00000000 		.4byte	0
+ 1270 0225 00000000 		.4byte	0
+ 1271              	.LLST14:
+ 1272 0229 00000000 		.4byte	.LVL38
+ 1273 022d 07000000 		.4byte	.LVL39-1
+ 1274 0231 0100     		.2byte	0x1
+ 1275 0233 50       		.byte	0x50
+ 1276 0234 07000000 		.4byte	.LVL39-1
+ 1277 0238 16000000 		.4byte	.LFE5
+ 1278 023c 0400     		.2byte	0x4
+ 1279 023e F3       		.byte	0xf3
+ 1280 023f 01       		.uleb128 0x1
+ 1281 0240 50       		.byte	0x50
+ 1282 0241 9F       		.byte	0x9f
+ 1283 0242 00000000 		.4byte	0
+ 1284 0246 00000000 		.4byte	0
+ 1285              		.section	.debug_aranges,"",%progbits
+ 1286 0000 44000000 		.4byte	0x44
+ 1287 0004 0200     		.2byte	0x2
+ 1288 0006 00000000 		.4byte	.Ldebug_info0
+ 1289 000a 04       		.byte	0x4
+ 1290 000b 00       		.byte	0
+ 1291 000c 0000     		.2byte	0
+ 1292 000e 0000     		.2byte	0
+ 1293 0010 00000000 		.4byte	.LFB0
+ 1294 0014 0A000000 		.4byte	.LFE0-.LFB0
+ 1295 0018 00000000 		.4byte	.LFB1
+ 1296 001c 0A000000 		.4byte	.LFE1-.LFB1
+ 1297 0020 00000000 		.4byte	.LFB2
+ 1298 0024 3A000000 		.4byte	.LFE2-.LFB2
+ 1299 0028 00000000 		.4byte	.LFB3
+ 1300 002c 62000000 		.4byte	.LFE3-.LFB3
+ 1301 0030 00000000 		.4byte	.LFB4
+ 1302 0034 2E000000 		.4byte	.LFE4-.LFB4
+ 1303 0038 00000000 		.4byte	.LFB5
+ 1304 003c 16000000 		.4byte	.LFE5-.LFB5
+ 1305 0040 00000000 		.4byte	0
+ 1306 0044 00000000 		.4byte	0
+ 1307              		.section	.debug_ranges,"",%progbits
+ 1308              	.Ldebug_ranges0:
+ 1309 0000 30000000 		.4byte	.LBB2
+ 1310 0004 44000000 		.4byte	.LBE2
+ 1311 0008 46000000 		.4byte	.LBB3
+ 1312 000c 54000000 		.4byte	.LBE3
+ 1313 0010 00000000 		.4byte	0
+ 1314 0014 00000000 		.4byte	0
+ 1315 0018 00000000 		.4byte	.LFB0
+ 1316 001c 0A000000 		.4byte	.LFE0
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 27
+
+
+ 1317 0020 00000000 		.4byte	.LFB1
+ 1318 0024 0A000000 		.4byte	.LFE1
+ 1319 0028 00000000 		.4byte	.LFB2
+ 1320 002c 3A000000 		.4byte	.LFE2
+ 1321 0030 00000000 		.4byte	.LFB3
+ 1322 0034 62000000 		.4byte	.LFE3
+ 1323 0038 00000000 		.4byte	.LFB4
+ 1324 003c 2E000000 		.4byte	.LFE4
+ 1325 0040 00000000 		.4byte	.LFB5
+ 1326 0044 16000000 		.4byte	.LFE5
+ 1327 0048 00000000 		.4byte	0
+ 1328 004c 00000000 		.4byte	0
+ 1329              		.section	.debug_line,"",%progbits
+ 1330              	.Ldebug_line0:
+ 1331 0000 E4010000 		.section	.debug_str,"MS",%progbits,1
+ 1331      02005A01 
+ 1331      00000201 
+ 1331      FB0E0D00 
+ 1331      01010101 
+ 1332              	.LASF9:
+ 1333 0000 5F5F7569 		.ascii	"__uint8_t\000"
+ 1333      6E74385F 
+ 1333      7400
+ 1334              	.LASF36:
+ 1335 000a 4932435F 		.ascii	"I2C_Master_MasterReadByte\000"
+ 1335      4D617374 
+ 1335      65725F4D 
+ 1335      61737465 
+ 1335      72526561 
+ 1336              	.LASF34:
+ 1337 0024 4932435F 		.ascii	"I2C_Master_MasterWriteByte\000"
+ 1337      4D617374 
+ 1337      65725F4D 
+ 1337      61737465 
+ 1337      72577269 
+ 1338              	.LASF26:
+ 1339 003f 72656769 		.ascii	"register_count\000"
+ 1339      73746572 
+ 1339      5F636F75 
+ 1339      6E7400
+ 1340              	.LASF39:
+ 1341 004e 4932435F 		.ascii	"I2C_Interface.c\000"
+ 1341      496E7465 
+ 1341      72666163 
+ 1341      652E6300 
+ 1342              	.LASF16:
+ 1343 005e 4572726F 		.ascii	"ErrorCode\000"
+ 1343      72436F64 
+ 1343      6500
+ 1344              	.LASF30:
+ 1345 0068 4932435F 		.ascii	"I2C_Peripheral_IsDeviceConnected\000"
+ 1345      50657269 
+ 1345      70686572 
+ 1345      616C5F49 
+ 1345      73446576 
+ 1346              	.LASF11:
+ 1347 0089 666C6F61 		.ascii	"float\000"
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 28
+
+
+ 1347      7400
+ 1348              	.LASF24:
+ 1349 008f 64617461 		.ascii	"data\000"
+ 1349      00
+ 1350              	.LASF1:
+ 1351 0094 756E7369 		.ascii	"unsigned char\000"
+ 1351      676E6564 
+ 1351      20636861 
+ 1351      7200
+ 1352              	.LASF38:
+ 1353 00a2 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1353      43313120 
+ 1353      352E342E 
+ 1353      31203230 
+ 1353      31363036 
+ 1354 00d5 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1354      20726576 
+ 1354      6973696F 
+ 1354      6E203233 
+ 1354      37373135 
+ 1355 0108 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1355      66756E63 
+ 1355      74696F6E 
+ 1355      2D736563 
+ 1355      74696F6E 
+ 1356              	.LASF5:
+ 1357 0130 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1357      20756E73 
+ 1357      69676E65 
+ 1357      6420696E 
+ 1357      7400
+ 1358              	.LASF3:
+ 1359 0142 73686F72 		.ascii	"short unsigned int\000"
+ 1359      7420756E 
+ 1359      7369676E 
+ 1359      65642069 
+ 1359      6E7400
+ 1360              	.LASF23:
+ 1361 0155 72656769 		.ascii	"register_address\000"
+ 1361      73746572 
+ 1361      5F616464 
+ 1361      72657373 
+ 1361      00
+ 1362              	.LASF35:
+ 1363 0166 4932435F 		.ascii	"I2C_Master_MasterSendRestart\000"
+ 1363      4D617374 
+ 1363      65725F4D 
+ 1363      61737465 
+ 1363      7253656E 
+ 1364              	.LASF28:
+ 1365 0183 636F756E 		.ascii	"counter\000"
+ 1365      74657200 
+ 1366              	.LASF31:
+ 1367 018b 4932435F 		.ascii	"I2C_Master_Start\000"
+ 1367      4D617374 
+ 1367      65725F53 
+ 1367      74617274 
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 29
+
+
+ 1367      00
+ 1368              	.LASF12:
+ 1369 019c 646F7562 		.ascii	"double\000"
+ 1369      6C6500
+ 1370              	.LASF25:
+ 1371 01a3 4932435F 		.ascii	"I2C_Peripheral_ReadRegisterMulti\000"
+ 1371      50657269 
+ 1371      70686572 
+ 1371      616C5F52 
+ 1371      65616452 
+ 1372              	.LASF29:
+ 1373 01c4 4932435F 		.ascii	"I2C_Peripheral_WriteRegister\000"
+ 1373      50657269 
+ 1373      70686572 
+ 1373      616C5F57 
+ 1373      72697465 
+ 1374              	.LASF8:
+ 1375 01e1 756E7369 		.ascii	"unsigned int\000"
+ 1375      676E6564 
+ 1375      20696E74 
+ 1375      00
+ 1376              	.LASF7:
+ 1377 01ee 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1377      206C6F6E 
+ 1377      6720756E 
+ 1377      7369676E 
+ 1377      65642069 
+ 1378              	.LASF10:
+ 1379 0205 75696E74 		.ascii	"uint8_t\000"
+ 1379      385F7400 
+ 1380              	.LASF40:
+ 1381 020d 433A5C55 		.ascii	"C:\\Users\\Matteo\\Desktop\\New folder\\AY2324_I_Pr"
+ 1381      73657273 
+ 1381      5C4D6174 
+ 1381      74656F5C 
+ 1381      4465736B 
+ 1382 023b 6F6A6563 		.ascii	"oject-6\\PSoC_Code\\Stream mode.cydsn\000"
+ 1382      742D365C 
+ 1382      50536F43 
+ 1382      5F436F64 
+ 1382      655C5374 
+ 1383              	.LASF15:
+ 1384 025f 4552524F 		.ascii	"ERROR\000"
+ 1384      5200
+ 1385              	.LASF33:
+ 1386 0265 4932435F 		.ascii	"I2C_Master_MasterSendStart\000"
+ 1386      4D617374 
+ 1386      65725F4D 
+ 1386      61737465 
+ 1386      7253656E 
+ 1387              	.LASF18:
+ 1388 0280 73697A65 		.ascii	"sizetype\000"
+ 1388      74797065 
+ 1388      00
+ 1389              	.LASF27:
+ 1390 0289 6572726F 		.ascii	"error\000"
+ 1390      7200
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 30
+
+
+ 1391              	.LASF6:
+ 1392 028f 6C6F6E67 		.ascii	"long long int\000"
+ 1392      206C6F6E 
+ 1392      6720696E 
+ 1392      7400
+ 1393              	.LASF37:
+ 1394 029d 4932435F 		.ascii	"I2C_Master_MasterSendStop\000"
+ 1394      4D617374 
+ 1394      65725F4D 
+ 1394      61737465 
+ 1394      7253656E 
+ 1395              	.LASF20:
+ 1396 02b7 4932435F 		.ascii	"I2C_Peripheral_Stop\000"
+ 1396      50657269 
+ 1396      70686572 
+ 1396      616C5F53 
+ 1396      746F7000 
+ 1397              	.LASF21:
+ 1398 02cb 4932435F 		.ascii	"I2C_Peripheral_ReadRegister\000"
+ 1398      50657269 
+ 1398      70686572 
+ 1398      616C5F52 
+ 1398      65616452 
+ 1399              	.LASF2:
+ 1400 02e7 73686F72 		.ascii	"short int\000"
+ 1400      7420696E 
+ 1400      7400
+ 1401              	.LASF22:
+ 1402 02f1 64657669 		.ascii	"device_address\000"
+ 1402      63655F61 
+ 1402      64647265 
+ 1402      737300
+ 1403              	.LASF32:
+ 1404 0300 4932435F 		.ascii	"I2C_Master_Stop\000"
+ 1404      4D617374 
+ 1404      65725F53 
+ 1404      746F7000 
+ 1405              	.LASF14:
+ 1406 0310 4E4F5F45 		.ascii	"NO_ERROR\000"
+ 1406      52524F52 
+ 1406      00
+ 1407              	.LASF4:
+ 1408 0319 6C6F6E67 		.ascii	"long int\000"
+ 1408      20696E74 
+ 1408      00
+ 1409              	.LASF13:
+ 1410 0322 63686172 		.ascii	"char\000"
+ 1410      00
+ 1411              	.LASF17:
+ 1412 0327 6C6F6E67 		.ascii	"long double\000"
+ 1412      20646F75 
+ 1412      626C6500 
+ 1413              	.LASF0:
+ 1414 0333 7369676E 		.ascii	"signed char\000"
+ 1414      65642063 
+ 1414      68617200 
+ 1415              	.LASF19:
+ARM GAS  C:\Users\Matteo\AppData\Local\Temp\ccKyfPHN.s 			page 31
+
+
+ 1416 033f 4932435F 		.ascii	"I2C_Peripheral_Start\000"
+ 1416      50657269 
+ 1416      70686572 
+ 1416      616C5F53 
+ 1416      74617274 
+ 1417              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
